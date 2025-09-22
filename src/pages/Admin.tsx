@@ -44,23 +44,8 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      navigate("/auth");
-      return;
-    }
-    
-    if (!isAdmin) {
-      toast({
-        title: "Access Denied",
-        description: "You don't have admin permissions",
-        variant: "destructive",
-      });
-      navigate("/");
-      return;
-    }
-
     loadDashboardData();
-  }, [user, isAdmin, navigate, toast]);
+  }, []);
 
   const loadDashboardData = async () => {
     try {

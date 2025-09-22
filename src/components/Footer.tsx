@@ -152,6 +152,9 @@ const Footer = () => {
             <a href="#" className="text-cream/60 hover:text-coral transition-colors">
               Accessibility
             </a>
+            <a href="/admin" className="text-cream/60 hover:text-coral transition-colors">
+              Admin Dashboard
+            </a>
           </div>
         </div>
       </div>
