@@ -9,9 +9,9 @@ const Header = () => {
   const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect admins to dashboard
+  // Redirect admins to dashboard only from auth page
   useEffect(() => {
-    if (user && isAdmin) {
+    if (user && isAdmin && window.location.pathname === '/auth') {
       navigate('/admin');
     }
   }, [user, isAdmin, navigate]);
