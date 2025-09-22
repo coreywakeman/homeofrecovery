@@ -13,12 +13,34 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        'heading': ['Poppins', 'system-ui', 'sans-serif'],
+        'body': ['Inter', 'system-ui', 'sans-serif'],
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        
+        // Brand colors
+        'taupe': {
+          DEFAULT: "hsl(var(--taupe-primary))",
+          primary: "hsl(var(--taupe-primary))",
+        },
+        'cream': {
+          DEFAULT: "hsl(var(--warm-cream))",
+          warm: "hsl(var(--warm-cream))",
+        },
+        'charcoal': "hsl(var(--charcoal))",
+        
+        // Accent colors
+        'ember': "hsl(var(--ember-orange))",
+        'coral': "hsl(var(--coral-pink))",
+        'violet': "hsl(var(--violet-purple))",
+        'calm-blue': "hsl(var(--calm-blue))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -84,6 +106,23 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fadeIn 0.6s ease-out",
+        "slide-up": "slideUp 0.8s ease-out",
+        "float": "float 3s ease-in-out infinite",
+      },
+      backgroundImage: {
+        'gradient-wellness': 'var(--gradient-wellness)',
+        'gradient-hero': 'var(--gradient-hero)',
+        'gradient-accent': 'var(--gradient-accent)',
+      },
+      boxShadow: {
+        'wellness': 'var(--shadow-wellness)',
+        'wellness-card': 'var(--shadow-card)',
+        'wellness-elevated': 'var(--shadow-elevated)',
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'bounce': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
       },
     },
   },
