@@ -156,6 +156,9 @@ const Footer = () => {
             <Link to="/admin" className="text-cream/60 hover:text-coral transition-colors">
               Admin Dashboard
             </Link>
+            <Link to="/members" className="text-cream/60 hover:text-coral transition-colors">
+              Members Hub
+            </Link>
           </div>
         </div>
       </div>
