@@ -15,7 +15,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Toggle } from "@/components/ui/toggle";
 import { useToast } from "@/hooks/use-toast";
 
-import { CalendarDays, Users, PieChart, DollarSign, Settings, Bell, LogOut } from "lucide-react";
+import { CalendarDays, Users, PieChart, DollarSign, Settings, Bell, LogOut, Trophy } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   AreaChart,
   Area,
@@ -158,6 +159,19 @@ export default function Admin() {
   
   return (
     <div className="min-h-screen bg-background p-6">
+      {/* Demo Mode Banner */}
+      <div className="mb-4 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Badge className="bg-primary text-primary-foreground">DEMO MODE</Badge>
+            <span className="text-sm font-medium">Professional Wellness Center Management System</span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <Trophy className="w-4 h-4" />
+            <span>136+ Clients • 191+ Bookings • $12,847+ Revenue</span>
+          </div>
+        </div>
+      </div>
       <div className="max-w-7xl mx-auto">
         <header className="flex items-center justify-between mb-6">
           <div>
