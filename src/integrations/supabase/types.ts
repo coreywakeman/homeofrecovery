@@ -14,7 +14,241 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_date: string
+          created_at: string
+          id: string
+          location_id: string
+          notes: string | null
+          payment_intent_id: string | null
+          payment_status: string
+          service_id: string
+          status: string
+          time_slot_id: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          created_at?: string
+          id?: string
+          location_id: string
+          notes?: string | null
+          payment_intent_id?: string | null
+          payment_status?: string
+          service_id: string
+          status?: string
+          time_slot_id: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          created_at?: string
+          id?: string
+          location_id?: string
+          notes?: string | null
+          payment_intent_id?: string | null
+          payment_status?: string
+          service_id?: string
+          status?: string
+          time_slot_id?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_time_slot_id_fkey"
+            columns: ["time_slot_id"]
+            isOneToOne: false
+            referencedRelation: "time_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations: {
+        Row: {
+          active: boolean | null
+          address: string
+          created_at: string
+          id: string
+          name: string
+          phone: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          address: string
+          created_at?: string
+          id?: string
+          name: string
+          phone?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          address?: string
+          created_at?: string
+          id?: string
+          name?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      memberships: {
+        Row: {
+          auto_renew: boolean | null
+          created_at: string
+          credits_remaining: number | null
+          end_date: string | null
+          id: string
+          plan_type: string
+          start_date: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_renew?: boolean | null
+          created_at?: string
+          credits_remaining?: number | null
+          end_date?: string | null
+          id?: string
+          plan_type: string
+          start_date?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_renew?: boolean | null
+          created_at?: string
+          credits_remaining?: number | null
+          end_date?: string | null
+          id?: string
+          plan_type?: string
+          start_date?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          active: boolean | null
+          category: string
+          created_at: string
+          description: string | null
+          duration: number
+          equipment_type: string | null
+          id: string
+          image_url: string | null
+          max_capacity: number | null
+          name: string
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          category: string
+          created_at?: string
+          description?: string | null
+          duration: number
+          equipment_type?: string | null
+          id?: string
+          image_url?: string | null
+          max_capacity?: number | null
+          name: string
+          price: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration?: number
+          equipment_type?: string | null
+          id?: string
+          image_url?: string | null
+          max_capacity?: number | null
+          name?: string
+          price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      time_slots: {
+        Row: {
+          active: boolean | null
+          available_spots: number
+          created_at: string
+          end_time: string
+          id: string
+          location_id: string
+          service_id: string
+          start_time: string
+        }
+        Insert: {
+          active?: boolean | null
+          available_spots?: number
+          created_at?: string
+          end_time: string
+          id?: string
+          location_id: string
+          service_id: string
+          start_time: string
+        }
+        Update: {
+          active?: boolean | null
+          available_spots?: number
+          created_at?: string
+          end_time?: string
+          id?: string
+          location_id?: string
+          service_id?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_slots_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_slots_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

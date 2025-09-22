@@ -6,30 +6,31 @@ const MembershipsSection = () => {
   const plans = [
     {
       name: "Drop-In",
-      price: "35",
-      period: "per class",
-      description: "Perfect for trying out our classes",
+      price: "45",
+      period: "per session",
+      description: "Perfect for trying our recovery services",
       features: [
-        "Access to any class",
+        "Access to any service",
         "No commitment",
-        "24-hour cancellation",
-        "Guest privileges"
+        "4-hour cancellation",
+        "Flexible scheduling"
       ],
       popular: false,
       buttonText: "Book Now",
       color: "from-taupe/10 to-coral/10"
     },
     {
-      name: "Class Pack",
-      price: "280",
-      period: "10 classes",
-      description: "Best value for regular practice",
+      name: "Recovery Pack",
+      price: "360",
+      period: "10 sessions",
+      description: "Best value for regular recovery",
       features: [
-        "10 classes to use anytime",
-        "3-month expiry",
+        "10 sessions to use anytime",
+        "6-month expiry",
         "Priority booking",
-        "Free wellness consultation",
-        "Member events access"
+        "Free consultation",
+        "20% savings vs drop-in",
+        "Mix any services"
       ],
       popular: true,
       buttonText: "Choose Plan",
@@ -37,16 +38,17 @@ const MembershipsSection = () => {
     },
     {
       name: "Unlimited",
-      price: "189",
+      price: "249",
       period: "per month",
-      description: "Complete wellness transformation",
+      description: "Complete recovery transformation",
       features: [
-        "Unlimited classes",
-        "Personal coaching session",
-        "Nutrition consultation",
-        "Recovery tracking",
+        "Unlimited sessions",
+        "All service access",
+        "Personal recovery plan",
+        "Advanced scheduling",
         "Priority support",
-        "Guest passes (2/month)"
+        "Guest passes (2/month)",
+        "Recovery tracking"
       ],
       popular: false,
       buttonText: "Start Journey",
@@ -59,11 +61,11 @@ const MembershipsSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Choose Your Path to Recovery
+            Choose Your Recovery Plan
           </h2>
           <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Flexible membership options designed to support your unique wellness journey. 
-            Start where you are, grow at your own pace.
+            Flexible membership options designed to fit your recovery goals and schedule. 
+            Start your wellness journey with cutting-edge technology.
           </p>
         </div>
 
