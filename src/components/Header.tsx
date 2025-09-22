@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X, User, LogOut } from "lucide-react";
@@ -7,6 +7,14 @@ import { Menu, X, User, LogOut } from "lucide-react";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect admins to dashboard
+  useEffect(() => {
+    if (user && isAdmin) {
+      navigate('/admin');
+    }
+  }, [user, isAdmin, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -42,13 +50,8 @@ const Header = () => {
               </a>
             ))}
             
-            {user ? (
+            {user && !isAdmin ? (
               <div className="flex items-center space-x-4">
-                {isAdmin && (
-                  <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
-                    Admin
-                  </span>
-                )}
                 <span className="text-sm text-muted-foreground">
                   {user.email}
                 </span>
@@ -57,7 +60,7 @@ const Header = () => {
                   Sign Out
                 </Button>
               </div>
-            ) : (
+            ) : !user ? (
               <div className="flex items-center space-x-4">
                 <Link to="/auth">
                   <Button variant="outline">
@@ -67,7 +70,7 @@ const Header = () => {
                 </Link>
                 <Button className="btn-wellness">Book Session</Button>
               </div>
-            )}
+            ) : null}
           </nav>
 
           {/* Mobile menu button */}
@@ -96,20 +99,15 @@ const Header = () => {
                 </a>
               ))}
               
-              {user ? (
+              {user && !isAdmin ? (
                 <div className="px-3 py-2 space-y-2">
-                  {isAdmin && (
-                    <span className="text-xs bg-primary text-primary-foreground px-2 py-1 rounded">
-                      Admin
-                    </span>
-                  )}
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                   <Button onClick={handleSignOut} variant="outline" size="sm" className="w-full">
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
                   </Button>
                 </div>
-              ) : (
+              ) : !user ? (
                 <div className="px-3 py-2 space-y-2">
                   <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
                     <Button variant="outline" className="w-full">
@@ -119,7 +117,7 @@ const Header = () => {
                   </Link>
                   <Button className="btn-wellness w-full">Book Session</Button>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         )}
