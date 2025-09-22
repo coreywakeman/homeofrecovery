@@ -40,6 +40,8 @@ export default function Admin() {
   const [bookings, setBookings] = useState([]);
   const [services, setServices] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [revenueData, setRevenueData] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -49,10 +51,11 @@ export default function Admin() {
 
   const loadDashboardData = async () => {
     try {
-      // Load overview stats
+      // Load all data
       const { data: bookingsData } = await supabase
         .from('bookings')
-        .select('*');
+        .select('*')
+        .order('booking_date', { ascending: false });
       
       const { data: servicesData } = await supabase
         .from('services')
@@ -62,9 +65,27 @@ export default function Admin() {
         .from('locations')
         .select('*');
 
+      // Get unique clients from bookings
+      const uniqueClients = bookingsData?.reduce((acc, booking) => {
+        if (!acc.find(client => client.user_id === booking.user_id)) {
+          acc.push({
+            user_id: booking.user_id,
+            totalBookings: bookingsData.filter(b => b.user_id === booking.user_id).length,
+            totalSpent: bookingsData
+              .filter(b => b.user_id === booking.user_id && b.payment_status === 'completed')
+              .reduce((sum, b) => sum + Number(b.total_amount), 0),
+            lastBooking: Math.max(...bookingsData
+              .filter(b => b.user_id === booking.user_id)
+              .map(b => new Date(b.booking_date).getTime()))
+          });
+        }
+        return acc;
+      }, []) || [];
+
       setBookings(bookingsData || []);
       setServices(servicesData || []);
       setLocations(locationsData || []);
+      setClients(uniqueClients);
       
       // Calculate overview stats
       const todayBookings = bookingsData?.filter(b => 
@@ -75,11 +96,33 @@ export default function Admin() {
         b.payment_status === 'completed' ? sum + Number(b.total_amount) : sum, 0
       ) || 0;
 
+      // Generate revenue data for the chart
+      const last30Days = Array.from({length: 30}, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        return date.toISOString().split('T')[0];
+      }).reverse();
+
+      const revenueByDay = last30Days.map(date => {
+        const dayRevenue = bookingsData?.filter(b => 
+          b.booking_date.split('T')[0] === date && b.payment_status === 'completed'
+        ).reduce((sum, b) => sum + Number(b.total_amount), 0) || 0;
+        
+        return {
+          date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+          revenue: dayRevenue
+        };
+      });
+
+      setRevenueData(revenueByDay);
+
       setOverview({
         todayBookings,
         totalBookings: bookingsData?.length || 0,
         totalRevenue,
         activeServices: servicesData?.filter(s => s.active).length || 0,
+        totalClients: uniqueClients.length,
+        avgBookingValue: bookingsData?.length ? (totalRevenue / bookingsData.filter(b => b.payment_status === 'completed').length).toFixed(2) : 0
       });
       
     } catch (error) {
@@ -153,10 +196,10 @@ export default function Admin() {
                 onClick={() => setTab("services")} 
               />
               <NavItem 
-                label="Locations" 
+                label="Clients" 
                 icon={<Users size={16} />} 
-                active={tab === "locations"} 
-                onClick={() => setTab("locations")} 
+                active={tab === "clients"} 
+                onClick={() => setTab("clients")} 
               />
             </nav>
           </aside>
@@ -164,14 +207,43 @@ export default function Admin() {
           <main className="col-span-9">
             {tab === "overview" && (
               <section className="space-y-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                   <StatCard title="Today's Bookings" value={overview?.todayBookings || 0} />
                   <StatCard title="Total Bookings" value={overview?.totalBookings || 0} />
                   <StatCard title="Total Revenue" value={`$${overview?.totalRevenue || 0}`} />
                   <StatCard title="Active Services" value={overview?.activeServices || 0} />
+                  <StatCard title="Total Clients" value={overview?.totalClients || 0} />
+                  <StatCard title="Avg Booking" value={`$${overview?.avgBookingValue || 0}`} />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Revenue Over Time (30 Days)</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={revenueData}>
+                          <defs>
+                            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
+                              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <XAxis dataKey="date" />
+                          <YAxis />
+                          <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
+                          <Area 
+                            type="monotone" 
+                            dataKey="revenue" 
+                            stroke="hsl(var(--primary))" 
+                            fillOpacity={1} 
+                            fill="url(#colorRevenue)" 
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
                   <Card>
                     <CardHeader>
                       <CardTitle>Recent Bookings</CardTitle>
@@ -329,6 +401,83 @@ export default function Admin() {
                         ))}
                       </TableBody>
                     </Table>
+                  </CardContent>
+                </Card>
+              </section>
+            )}
+
+            {tab === "clients" && (
+              <section>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Client Analytics ({clients.length} Total Clients)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Client ID</TableHead>
+                          <TableHead>Total Bookings</TableHead>
+                          <TableHead>Total Spent</TableHead>
+                          <TableHead>Last Booking</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {clients
+                          .sort((a, b) => b.totalSpent - a.totalSpent) // Sort by highest spenders
+                          .slice(0, 20) // Show top 20 clients
+                          .map((client, index) => {
+                            const daysSinceLastBooking = Math.floor((Date.now() - client.lastBooking) / (1000 * 60 * 60 * 24));
+                            const isActive = daysSinceLastBooking <= 30;
+                            
+                            return (
+                              <TableRow key={client.user_id}>
+                                <TableCell className="font-mono text-xs">
+                                  ...{client.user_id.slice(-8)}
+                                </TableCell>
+                                <TableCell className="font-medium">{client.totalBookings}</TableCell>
+                                <TableCell className="font-medium">${client.totalSpent.toFixed(2)}</TableCell>
+                                <TableCell>{new Date(client.lastBooking).toLocaleDateString()}</TableCell>
+                                <TableCell>
+                                  <span className={`px-2 py-1 rounded-full text-xs ${
+                                    isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                  }`}>
+                                    {isActive ? 'Active' : 'Inactive'}
+                                  </span>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                    
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="text-sm text-muted-foreground">Active Clients (30 days)</div>
+                          <div className="text-2xl font-bold">
+                            {clients.filter(c => (Date.now() - c.lastBooking) / (1000 * 60 * 60 * 24) <= 30).length}
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="text-sm text-muted-foreground">Avg Bookings per Client</div>
+                          <div className="text-2xl font-bold">
+                            {clients.length ? (clients.reduce((sum, c) => sum + c.totalBookings, 0) / clients.length).toFixed(1) : 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4">
+                          <div className="text-sm text-muted-foreground">Top Client Spend</div>
+                          <div className="text-2xl font-bold">
+                            ${clients.length ? Math.max(...clients.map(c => c.totalSpent)).toFixed(2) : 0}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
                   </CardContent>
                 </Card>
               </section>
