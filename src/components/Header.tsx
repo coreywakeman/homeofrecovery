@@ -27,6 +27,10 @@ const Header = () => {
     { name: "Contact", href: "#contact" },
   ];
 
+  const handleMembersClick = () => {
+    navigate('/members');
+  };
+
   return (
     <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,6 +56,9 @@ const Header = () => {
             
             {user && !isAdmin ? (
               <div className="flex items-center space-x-4">
+                <Button variant="outline" onClick={handleMembersClick}>
+                  Members Hub
+                </Button>
                 <span className="text-sm text-muted-foreground">
                   {user.email}
                 </span>
@@ -101,6 +108,9 @@ const Header = () => {
               
               {user && !isAdmin ? (
                 <div className="px-3 py-2 space-y-2">
+                  <Button variant="outline" onClick={handleMembersClick} className="w-full">
+                    Members Hub
+                  </Button>
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                   <Button onClick={handleSignOut} variant="outline" size="sm" className="w-full">
                     <LogOut className="w-4 h-4 mr-2" />

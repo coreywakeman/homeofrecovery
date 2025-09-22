@@ -30,6 +30,7 @@ export interface DemoBooking {
   client_name: string;
   service_name: string;
   location_name: string;
+  category?: string;
 }
 
 export interface DemoService {
@@ -275,5 +276,117 @@ export function generateDemoData() {
     },
     revenueData,
     serviceDistribution
+  };
+}
+
+// Member-specific demo data generator
+export function generateMemberDemoData() {
+  const services = generateDemoServices();
+  const locations = generateDemoLocations();
+  
+  // Generate member profile
+  const profile = {
+    id: 'member-demo-1',
+    first_name: 'Alex',
+    last_name: 'Johnson',
+    email: 'alex.johnson@email.com',
+    created_at: subDays(new Date(), 180).toISOString()
+  };
+  
+  // Generate member bookings (last 6 months)
+  const memberBookings: DemoBooking[] = [];
+  let bookingId = 1;
+  
+  for (let month = 0; month < 6; month++) {
+    const bookingsThisMonth = rng.nextInt(3, 8);
+    
+    for (let i = 0; i < bookingsThisMonth; i++) {
+      const date = subDays(new Date(), month * 30 + rng.nextInt(0, 29));
+      const service = rng.choice(services);
+      const location = rng.choice(locations);
+      
+      let status: DemoBooking['status'];
+      if (date < new Date()) {
+        status = rng.next() > 0.1 ? 'completed' : 'cancelled';
+      } else {
+        status = 'confirmed';
+      }
+      
+      memberBookings.push({
+        id: `member-booking-${bookingId++}`,
+        user_id: profile.id,
+        service_id: service.id,
+        location_id: location.id,
+        booking_date: date.toISOString(),
+        status,
+        payment_status: status === 'completed' ? 'completed' : 'pending',
+        total_amount: service.price + rng.nextInt(-10, 15),
+        notes: rng.next() > 0.8 ? rng.choice(['Regular session', 'First time trying this', 'Recovery focused', 'Relaxation session']) : undefined,
+        created_at: subDays(date, rng.nextInt(1, 7)).toISOString(),
+        client_name: `${profile.first_name} ${profile.last_name}`,
+        service_name: service.name,
+        location_name: location.name,
+        category: service.category
+      });
+    }
+  }
+  
+  // Sort bookings by date (newest first)
+  memberBookings.sort((a, b) => new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime());
+  
+  // Generate membership
+  const membership = {
+    id: 'membership-demo-1',
+    user_id: profile.id,
+    plan_type: 'Premium',
+    status: 'active',
+    credits_remaining: 45,
+    auto_renew: true,
+    start_date: subDays(new Date(), 90).toISOString(),
+    end_date: addDays(new Date(), 30).toISOString(),
+    created_at: subDays(new Date(), 90).toISOString()
+  };
+  
+  // Calculate stats
+  const upcomingBookings = memberBookings.filter(b => 
+    new Date(b.booking_date) > new Date() && b.status === 'confirmed'
+  );
+  
+  const completedBookings = memberBookings.filter(b => b.status === 'completed');
+  const totalSpent = completedBookings.reduce((sum, b) => sum + b.total_amount, 0);
+  
+  // Activity data for chart (last 6 months)
+  const activityData = [];
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date();
+    date.setMonth(date.getMonth() - i);
+    const monthBookings = memberBookings.filter(b => {
+      const bookingDate = new Date(b.booking_date);
+      return bookingDate.getMonth() === date.getMonth() && 
+             bookingDate.getFullYear() === date.getFullYear() &&
+             b.status === 'completed';
+    });
+    
+    activityData.push({
+      month: date.toLocaleDateString('en-US', { month: 'short' }),
+      sessions: monthBookings.length,
+      amount: monthBookings.reduce((sum, b) => sum + b.total_amount, 0)
+    });
+  }
+  
+  return {
+    profile,
+    bookings: memberBookings,
+    membership,
+    services,
+    locations,
+    stats: {
+      upcomingBookings: upcomingBookings.length,
+      completedSessions: completedBookings.length,
+      totalSpent,
+      creditsRemaining: membership.credits_remaining,
+      memberSince: profile.created_at
+    },
+    activityData
   };
 }
