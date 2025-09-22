@@ -122,85 +122,92 @@ const ServicesSection = () => {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-16">
           {services.map((service, index) => (
             <Card 
               key={service.name} 
-              className={`wellness-card group relative overflow-hidden animate-slide-up ${
-                service.featured ? 'ring-2 ring-primary/20 shadow-xl scale-105' : ''
+              className={`wellness-card group relative overflow-hidden animate-slide-up hover:shadow-lg transition-all duration-300 ${
+                service.featured ? 'ring-2 ring-primary/30 shadow-lg' : ''
               }`}
               style={{animationDelay: `${index * 0.1}s`}}
             >
               {service.featured && (
-                <div className="absolute top-4 right-4 z-10">
-                  <Badge className="bg-primary text-primary-foreground">
-                    Most Popular
+                <div className="absolute top-3 right-3 z-10">
+                  <Badge className="bg-primary text-primary-foreground text-xs px-2 py-1">
+                    Popular
                   </Badge>
                 </div>
               )}
               
-              <CardHeader className="pb-6">
-                <div className={`w-18 h-18 rounded-3xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-lg`}>
-                  {service.icon}
+              <CardHeader className="pb-4 p-4">
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-all duration-300 shadow-md`}>
+                  <div className="scale-75">
+                    {service.icon}
+                  </div>
                 </div>
                 
-                <div className="mb-4">
-                  <Badge variant="secondary" className="mb-3 text-xs">
+                <div>
+                  <Badge variant="secondary" className="mb-2 text-xs px-2 py-0.5">
                     {service.category}
                   </Badge>
-                  <CardTitle className="font-heading text-2xl text-foreground mb-3">
+                  <CardTitle className="font-heading text-lg text-foreground mb-2 leading-tight">
                     {service.name}
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground text-base leading-relaxed">
+                  <CardDescription className="text-muted-foreground text-sm leading-snug line-clamp-2">
                     {service.description}
                   </CardDescription>
                 </div>
               </CardHeader>
               
-              <CardContent className="pt-0">
-                {/* Pricing */}
-                <div className="flex items-center justify-between mb-6 p-4 bg-muted/50 rounded-lg">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Clock className="w-4 h-4 mr-2" />
+              <CardContent className="pt-0 p-4">
+                {/* Pricing & Info */}
+                <div className="flex items-center justify-between mb-4 p-3 bg-muted/30 rounded-lg">
+                  <div className="space-y-1">
+                    <div className="flex items-center text-xs text-muted-foreground">
+                      <Clock className="w-3 h-3 mr-1" />
                       {service.duration}
                     </div>
-                    <div className="flex items-center text-sm text-muted-foreground">
-                      <Users className="w-4 h-4 mr-2" />
+                    <div className="flex items-center text-xs text-muted-foreground">
+                      <Users className="w-3 h-3 mr-1" />
                       {service.capacity}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-primary">
+                    <div className="text-xl font-bold text-primary">
                       {service.price}
                     </div>
                     {service.originalPrice && (
-                      <div className="text-sm text-muted-foreground line-through">
+                      <div className="text-xs text-muted-foreground line-through">
                         {service.originalPrice}
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Benefits */}
-                <div className="mb-6">
-                  <h4 className="font-semibold text-foreground mb-4 flex items-center">
-                    <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                    Key Benefits
+                {/* Key Benefits - Condensed */}
+                <div className="mb-4">
+                  <h4 className="font-medium text-foreground mb-2 text-sm flex items-center">
+                    <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
+                    Benefits
                   </h4>
-                  <ul className="space-y-3">
-                    {service.benefits.map((benefit, idx) => (
-                      <li key={idx} className="flex items-start text-sm text-muted-foreground">
-                        <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                  <ul className="space-y-1">
+                    {service.benefits.slice(0, 3).map((benefit, idx) => (
+                      <li key={idx} className="flex items-start text-xs text-muted-foreground">
+                        <div className="w-1.5 h-1.5 bg-gradient-to-r from-primary to-secondary rounded-full mr-2 mt-1.5 flex-shrink-0"></div>
                         <span className="leading-relaxed">{benefit}</span>
                       </li>
                     ))}
+                    {service.benefits.length > 3 && (
+                      <li className="text-xs text-muted-foreground/70 italic">
+                        +{service.benefits.length - 3} more benefits
+                      </li>
+                    )}
                   </ul>
                 </div>
                 
-                <Button className={`w-full group ${service.featured ? 'btn-wellness text-lg py-6' : 'btn-wellness'}`}>
-                  Book Session
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Button className="w-full btn-wellness py-2 text-sm group">
+                  Book Now
+                  <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" />
                 </Button>
               </CardContent>
             </Card>
