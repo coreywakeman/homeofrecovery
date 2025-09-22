@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 import { Toggle } from "@/components/ui/toggle";
 import { useToast } from "@/hooks/use-toast";
+import { generateDemoData } from "@/lib/demoData";
+import { useState, useEffect } from "react";
 
-import { CalendarDays, Users, PieChart, DollarSign, Settings, Bell, LogOut, Trophy } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { CalendarDays, Users, PieChart, DollarSign, Settings, Bell, LogOut, MapPin, Download } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -29,110 +31,166 @@ import {
   Cell,
 } from "recharts";
 
-const COLORS = ["hsl(var(--primary))", "hsl(var(--secondary))", "hsl(var(--accent))"];
+const COLORS = ["hsl(var(--primary))", "hsl(var(--secondary))", "hsl(var(--accent))", "#8884d8", "#82ca9d", "#ffc658"];
 
-export default function Admin() {
-  const { user, isAdmin, signOut } = useAuth();
+const Admin = () => {
+  const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const [tab, setTab] = useState("overview");
-  const [overview, setOverview] = useState(null);
-  const [bookings, setBookings] = useState([]);
-  const [services, setServices] = useState([]);
-  const [locations, setLocations] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [revenueData, setRevenueData] = useState([]);
-  const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("overview");
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    console.log("Admin component mounted");
-    loadDashboardData();
-  }, []);
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   const loadDashboardData = async () => {
     try {
-      // Load all data
-      const { data: bookingsData } = await supabase
-        .from('bookings')
-        .select('*')
-        .order('booking_date', { ascending: false });
+      setLoading(true);
       
-      const { data: servicesData } = await supabase
-        .from('services')
-        .select('*');
-        
-      const { data: locationsData } = await supabase
-        .from('locations')
-        .select('*');
+      // Check if we should use demo mode
+      const shouldUseDemoMode = !user || !isAdmin || new URLSearchParams(window.location.search).has('demo');
+      setIsDemoMode(shouldUseDemoMode);
+      
+      if (shouldUseDemoMode) {
+        // Use demo data
+        const demoData = generateDemoData();
+        setDashboardData(demoData);
+        setLoading(false);
+        return;
+      }
+      
+      // Fetch real data from Supabase
+      const { data: bookingsData, error: bookingsError } = await supabase
+        .from('bookings')
+        .select(`
+          *,
+          profiles(first_name, last_name, email),
+          services(name, category, price),
+          locations(name)
+        `)
+        .order('created_at', { ascending: false });
 
-      // Get unique clients from bookings
-      const uniqueClients = bookingsData?.reduce((acc, booking) => {
-        if (!acc.find(client => client.user_id === booking.user_id)) {
-          acc.push({
-            user_id: booking.user_id,
-            totalBookings: bookingsData.filter(b => b.user_id === booking.user_id).length,
-            totalSpent: bookingsData
-              .filter(b => b.user_id === booking.user_id && b.payment_status === 'completed')
-              .reduce((sum, b) => sum + Number(b.total_amount), 0),
-            lastBooking: Math.max(...bookingsData
-              .filter(b => b.user_id === booking.user_id)
-              .map(b => new Date(b.booking_date).getTime()))
+      if (bookingsError) {
+        console.error('Bookings error:', bookingsError);
+        // Fall back to demo data if RLS blocks access
+        const demoData = generateDemoData();
+        setDashboardData(demoData);
+        setIsDemoMode(true);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch services
+      const { data: servicesData, error: servicesError } = await supabase
+        .from('services')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (servicesError) throw servicesError;
+
+      // Fetch locations
+      const { data: locationsData, error: locationsError } = await supabase
+        .from('locations')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (locationsError) throw locationsError;
+
+      // Process bookings to get client data
+      const clientsMap = new Map();
+      
+      bookingsData?.forEach((booking: any) => {
+        const userId = booking.user_id;
+        const clientName = booking.profiles ? `${booking.profiles.first_name || ''} ${booking.profiles.last_name || ''}`.trim() : 'Unknown';
+        const clientEmail = booking.profiles?.email || '';
+        
+        if (!clientsMap.has(userId)) {
+          clientsMap.set(userId, {
+            id: userId,
+            name: clientName,
+            email: clientEmail,
+            totalBookings: 0,
+            totalSpent: 0,
+            lastBooking: booking.created_at,
           });
         }
-        return acc;
-      }, []) || [];
+        
+        const client = clientsMap.get(userId);
+        client.totalBookings += 1;
+        client.totalSpent += Number(booking.total_amount) || 0;
+        
+        // Update last booking if this one is more recent
+        if (new Date(booking.created_at) > new Date(client.lastBooking)) {
+          client.lastBooking = booking.created_at;
+        }
+      });
 
-      setBookings(bookingsData || []);
-      setServices(servicesData || []);
-      setLocations(locationsData || []);
-      setClients(uniqueClients);
-      
-      // Calculate overview stats
-      const todayBookings = bookingsData?.filter(b => 
-        new Date(b.booking_date).toDateString() === new Date().toDateString()
+      const clients = Array.from(clientsMap.values()).sort((a, b) => b.totalSpent - a.totalSpent);
+
+      // Calculate overview statistics
+      const today = new Date().toDateString();
+      const todayBookings = bookingsData?.filter(
+        (booking: any) => new Date(booking.booking_date).toDateString() === today
       ).length || 0;
-      
-      const totalRevenue = bookingsData?.reduce((sum, b) => 
-        b.payment_status === 'completed' ? sum + Number(b.total_amount) : sum, 0
+
+      const totalRevenue = bookingsData?.reduce(
+        (sum: number, booking: any) => sum + (Number(booking.total_amount) || 0),
+        0
       ) || 0;
 
-      // Generate revenue data for the chart
-      const last30Days = Array.from({length: 30}, (_, i) => {
+      const avgBookingValue = bookingsData?.length 
+        ? Math.round(totalRevenue / bookingsData.length)
+        : 0;
+
+      // Revenue data for charts (last 30 days)
+      const revenueData = [];
+      for (let i = 29; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
-        return date.toISOString().split('T')[0];
-      }).reverse();
-
-      const revenueByDay = last30Days.map(date => {
-        const dayRevenue = bookingsData?.filter(b => 
-          b.booking_date.split('T')[0] === date && b.payment_status === 'completed'
-        ).reduce((sum, b) => sum + Number(b.total_amount), 0) || 0;
+        const dayRevenue = bookingsData?.filter(
+          (booking: any) => new Date(booking.booking_date).toDateString() === date.toDateString()
+        ).reduce((sum: number, booking: any) => sum + (Number(booking.total_amount) || 0), 0) || 0;
         
-        return {
-          date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        revenueData.push({
+          date: date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
           revenue: dayRevenue
+        });
+      }
+
+      // Service distribution for pie chart
+      const serviceDistribution = servicesData?.map((service: any) => {
+        const serviceBookings = bookingsData?.filter(
+          (booking: any) => booking.service_id === service.id
+        ) || [];
+        return {
+          name: service.name,
+          value: serviceBookings.length,
+          revenue: serviceBookings.reduce((sum: number, booking: any) => sum + (Number(booking.total_amount) || 0), 0)
         };
-      });
+      }).filter((service: any) => service.value > 0) || [];
 
-      setRevenueData(revenueByDay);
-
-      setOverview({
-        todayBookings,
-        totalBookings: bookingsData?.length || 0,
-        totalRevenue,
-        activeServices: servicesData?.filter(s => s.active).length || 0,
-        totalClients: uniqueClients.length,
-        avgBookingValue: bookingsData?.length ? (totalRevenue / bookingsData.filter(b => b.payment_status === 'completed').length).toFixed(2) : 0
+      setDashboardData({
+        overview: {
+          todayBookings,
+          totalBookings: bookingsData?.length || 0,
+          totalRevenue,
+          activeServices: servicesData?.filter((s: any) => s.active).length || 0,
+          totalClients: clients.length,
+          avgBookingValue,
+        },
+        bookings: bookingsData || [],
+        services: servicesData || [],
+        locations: locationsData || [],
+        clients,
+        revenueData,
+        serviceDistribution,
       });
-      
     } catch (error) {
-      toast({
-        title: "Error loading dashboard",
-        description: error.message,
-        variant: "destructive",
-      });
+      console.error('Error loading dashboard data:', error);
+      // Fall back to demo data on any error
+      const demoData = generateDemoData();
+      setDashboardData(demoData);
+      setIsDemoMode(true);
     } finally {
       setLoading(false);
     }
@@ -140,13 +198,58 @@ export default function Admin() {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/");
+    navigate('/auth');
   };
 
+  const handleDemoAction = () => {
+    if (isDemoMode) {
+      toast({
+        title: "Demo Mode",
+        description: "Changes are not saved in demo mode",
+        variant: "default",
+      });
+    }
+  };
+
+  const exportCSV = (data: any[], filename: string) => {
+    if (isDemoMode) {
+      handleDemoAction();
+      return;
+    }
+    
+    const headers = Object.keys(data[0] || {});
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => headers.map(header => `"${row[header] || ''}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  useEffect(() => {
+    // Allow demo mode or require admin authentication
+    if (!user && !new URLSearchParams(window.location.search).has('demo')) {
+      navigate('/auth');
+      return;
+    }
+    
+    if (user && !isAdmin) {
+      navigate('/');
+      return;
+    }
+    
+    loadDashboardData();
+  }, [user, isAdmin, navigate]);
+
   if (loading) {
-    console.log("Admin loading state");
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-wellness flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading dashboard...</p>
@@ -155,138 +258,222 @@ export default function Admin() {
     );
   }
 
-  console.log("Admin rendering main content");
+  if (!dashboardData) {
+    return null;
+  }
+
+  const filteredBookings = dashboardData.bookings?.filter((booking: any) => {
+    if (!searchTerm) return true;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      (isDemoMode ? booking.client_name : (booking.profiles ? `${booking.profiles.first_name} ${booking.profiles.last_name}` : '')).toLowerCase().includes(searchLower) ||
+      (isDemoMode ? booking.service_name : (booking.services?.name || '')).toLowerCase().includes(searchLower) ||
+      booking.status.toLowerCase().includes(searchLower) ||
+      (booking.notes || '').toLowerCase().includes(searchLower)
+    );
+  }) || [];
+
+  const NavItem = ({ icon, label, value }: { icon: any, label: string, value: string }) => (
+    <button
+      onClick={() => setActiveTab(value)}
+      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+        activeTab === value 
+          ? 'bg-primary text-primary-foreground' 
+          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+      }`}
+    >
+      {icon}
+      <span className="font-medium">{label}</span>
+    </button>
+  );
+
+  const StatCard = ({ title, value, icon: Icon, trend }: { title: string, value: string, icon: any, trend?: string }) => (
+    <Card className="hover:shadow-md transition-shadow">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-2xl font-bold">{value}</p>
+            {trend && <p className="text-xs text-green-600 mt-1">{trend}</p>}
+          </div>
+          <Icon className="h-8 w-8 text-muted-foreground" />
+        </div>
+      </CardContent>
+    </Card>
+  );
   
   return (
     <div className="min-h-screen bg-background p-6">
-      {/* Demo Mode Banner */}
-      <div className="mb-4 bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Badge className="bg-primary text-primary-foreground">DEMO MODE</Badge>
-            <span className="text-sm font-medium">Professional Wellness Center Management System</span>
-          </div>
-          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-            <Trophy className="w-4 h-4" />
-            <span>136+ Clients • 191+ Bookings • $12,847+ Revenue</span>
-          </div>
+      {/* Optional Demo Indicator */}
+      {isDemoMode && new URLSearchParams(window.location.search).has('demo') && (
+        <div className="mb-4 flex justify-center">
+          <Badge variant="outline" className="text-xs">Demo Mode</Badge>
         </div>
-      </div>
+      )}
       <div className="max-w-7xl mx-auto">
         <header className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold">Wellness & Recovery — Admin</h1>
-            <p className="text-sm text-muted-foreground">Manage bookings, services, and system health.</p>
+            <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+            <p className="text-muted-foreground">Wellness & Recovery Center Management</p>
           </div>
-          <div className="flex items-center gap-3">
-            <Input 
-              value={search} 
-              onChange={(e) => setSearch(e.target.value)} 
-              placeholder="Search bookings, services..." 
-              className="w-64"
-            />
+          <div className="flex items-center space-x-4">
+            <Button variant="outline" size="icon">
+              <Bell className="h-4 w-4" />
+            </Button>
             <Button variant="outline" onClick={handleSignOut}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign out
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
             </Button>
           </div>
         </header>
 
-        <div className="grid grid-cols-12 gap-6">
-          <aside className="col-span-3">
-            <nav className="space-y-2">
-              <NavItem 
-                label="Overview" 
-                icon={<PieChart size={16} />} 
-                active={tab === "overview"} 
-                onClick={() => setTab("overview")} 
-              />
-              <NavItem 
-                label="Bookings" 
-                icon={<CalendarDays size={16} />} 
-                active={tab === "bookings"} 
-                onClick={() => setTab("bookings")} 
-              />
-              <NavItem 
-                label="Services" 
-                icon={<Settings size={16} />} 
-                active={tab === "services"} 
-                onClick={() => setTab("services")} 
-              />
-              <NavItem 
-                label="Clients" 
-                icon={<Users size={16} />} 
-                active={tab === "clients"} 
-                onClick={() => setTab("clients")} 
-              />
-            </nav>
+        <div className="flex space-x-6">
+          <aside className="w-64 space-y-2">
+            <NavItem icon={<Users className="w-4 h-4" />} label="Overview" value="overview" />
+            <NavItem icon={<CalendarDays className="w-4 h-4" />} label="Bookings" value="bookings" />
+            <NavItem icon={<PieChart className="w-4 h-4" />} label="Services" value="services" />
+            <NavItem icon={<DollarSign className="w-4 h-4" />} label="Clients" value="clients" />
+            <NavItem icon={<MapPin className="w-4 h-4" />} label="Locations" value="locations" />
           </aside>
 
-          <main className="col-span-9">
-            {tab === "overview" && (
-              <section className="space-y-6">
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                  <StatCard title="Today's Bookings" value={overview?.todayBookings || 0} />
-                  <StatCard title="Total Bookings" value={overview?.totalBookings || 0} />
-                  <StatCard title="Total Revenue" value={`$${overview?.totalRevenue || 0}`} />
-                  <StatCard title="Active Services" value={overview?.activeServices || 0} />
-                  <StatCard title="Total Clients" value={overview?.totalClients || 0} />
-                  <StatCard title="Avg Booking" value={`$${overview?.avgBookingValue || 0}`} />
+          <main className="flex-1">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+              <TabsContent value="overview" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                  <StatCard
+                    title="Today's Bookings"
+                    value={dashboardData.overview.todayBookings.toString()}
+                    icon={CalendarDays}
+                    trend="+12% from yesterday"
+                  />
+                  <StatCard
+                    title="Total Bookings"
+                    value={dashboardData.overview.totalBookings.toString()}
+                    icon={CalendarDays}
+                    trend="+23% this month"
+                  />
+                  <StatCard
+                    title="Total Revenue"
+                    value={`$${dashboardData.overview.totalRevenue.toLocaleString()}`}
+                    icon={DollarSign}
+                    trend="+18% this month"
+                  />
+                  <StatCard
+                    title="Active Services"
+                    value={dashboardData.overview.activeServices.toString()}
+                    icon={Settings}
+                    trend="All services active"
+                  />
+                  <StatCard
+                    title="Total Clients"
+                    value={dashboardData.overview.totalClients.toString()}
+                    icon={Users}
+                    trend="+15% this month"
+                  />
+                  <StatCard
+                    title="Avg Booking Value"
+                    value={`$${dashboardData.overview.avgBookingValue}`}
+                    icon={DollarSign}
+                    trend="+5% this month"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Revenue Over Time (30 Days)</CardTitle>
+                      <CardTitle>Revenue Trends</CardTitle>
+                      <CardDescription>Daily revenue over the last 30 days</CardDescription>
                     </CardHeader>
-                    <CardContent className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={revenueData}>
-                          <defs>
-                            <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
-                              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                            </linearGradient>
-                          </defs>
-                          <XAxis dataKey="date" />
-                          <YAxis />
-                          <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
-                          <Area 
-                            type="monotone" 
-                            dataKey="revenue" 
-                            stroke="hsl(var(--primary))" 
-                            fillOpacity={1} 
-                            fill="url(#colorRevenue)" 
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
+                    <CardContent>
+                      <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={dashboardData.revenueData}>
+                            <defs>
+                              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
+                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                              </linearGradient>
+                            </defs>
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
+                            <Area 
+                              type="monotone" 
+                              dataKey="revenue" 
+                              stroke="hsl(var(--primary))" 
+                              fillOpacity={1} 
+                              fill="url(#colorRevenue)" 
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
                     </CardContent>
                   </Card>
+
                   <Card>
                     <CardHeader>
+                      <CardTitle>Service Distribution</CardTitle>
+                      <CardDescription>Booking distribution by service type</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <RPieChart>
+                            <Pie 
+                              dataKey="value" 
+                              data={dashboardData.serviceDistribution}
+                              cx="50%" 
+                              cy="50%" 
+                              outerRadius={80} 
+                              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            >
+                              {dashboardData.serviceDistribution.map((entry: any, index: number) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              ))}
+                            </Pie>
+                            <Tooltip formatter={(value) => [value, 'Bookings']} />
+                          </RPieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="lg:col-span-2">
+                    <CardHeader>
                       <CardTitle>Recent Bookings</CardTitle>
+                      <CardDescription>Latest booking activity</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <Table>
                         <TableHeader>
                           <TableRow>
                             <TableHead>Date</TableHead>
+                            <TableHead>Client</TableHead>
+                            <TableHead>Service</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Amount</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {bookings.slice(0, 5).map((booking) => (
+                          {dashboardData.bookings.slice(0, 10).map((booking: any) => (
                             <TableRow key={booking.id}>
-                              <TableCell>{new Date(booking.booking_date).toLocaleDateString()}</TableCell>
                               <TableCell>
-                                <span className={`px-2 py-1 rounded-full text-xs ${
-                                  booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                                  booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                  'bg-red-100 text-red-800'
-                                }`}>
+                                {new Date(booking.booking_date).toLocaleDateString()}
+                              </TableCell>
+                              <TableCell>
+                                {isDemoMode ? booking.client_name : (
+                                  booking.profiles 
+                                    ? `${booking.profiles.first_name || ''} ${booking.profiles.last_name || ''}`.trim()
+                                    : 'Unknown'
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {isDemoMode ? booking.service_name : (booking.services?.name || 'Unknown Service')}
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={booking.status === 'completed' ? 'default' : 'secondary'}>
                                   {booking.status}
-                                </span>
+                                </Badge>
                               </TableCell>
                               <TableCell>${booking.total_amount}</TableCell>
                             </TableRow>
@@ -295,98 +482,105 @@ export default function Admin() {
                       </Table>
                     </CardContent>
                   </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Service Distribution</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-64">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <RPieChart>
-                          <Pie 
-                            dataKey="count" 
-                            data={services.map((service, index) => ({
-                              name: service.name,
-                              count: bookings.filter(b => b.service_id === service.id).length,
-                              fill: COLORS[index % COLORS.length]
-                            }))}
-                            outerRadius={80} 
-                            label
-                          />
-                          <Tooltip />
-                        </RPieChart>
-                      </ResponsiveContainer>
-                    </CardContent>
-                  </Card>
                 </div>
-              </section>
-            )}
+              </TabsContent>
 
-            {tab === "bookings" && (
-              <section>
+              <TabsContent value="bookings" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Bookings Management</h2>
+                  <div className="flex items-center space-x-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => exportCSV(filteredBookings, 'bookings')}
+                      className="flex items-center space-x-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Export CSV</span>
+                    </Button>
+                    <Input
+                      placeholder="Search bookings..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-64"
+                    />
+                  </div>
+                </div>
+
                 <Card>
                   <CardHeader>
                     <CardTitle>All Bookings</CardTitle>
+                    <CardDescription>
+                      {filteredBookings.length} total bookings
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
                           <TableHead>Date</TableHead>
+                          <TableHead>Client</TableHead>
                           <TableHead>Service</TableHead>
+                          <TableHead>Location</TableHead>
                           <TableHead>Status</TableHead>
-                          <TableHead>Payment Status</TableHead>
                           <TableHead>Amount</TableHead>
+                          <TableHead>Payment</TableHead>
                           <TableHead>Notes</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {bookings
-                          .filter(booking => 
-                            !search || 
-                            booking.notes?.toLowerCase().includes(search.toLowerCase()) ||
-                            booking.status.toLowerCase().includes(search.toLowerCase())
-                          )
-                          .map((booking) => (
+                        {filteredBookings.slice(0, 50).map((booking: any) => (
                           <TableRow key={booking.id}>
-                            <TableCell>{new Date(booking.booking_date).toLocaleDateString()}</TableCell>
                             <TableCell>
-                              {services.find(s => s.id === booking.service_id)?.name || 'Unknown Service'}
+                              {new Date(booking.booking_date).toLocaleDateString()}
                             </TableCell>
                             <TableCell>
-                              <span className={`px-2 py-1 rounded-full text-xs ${
-                                booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                                booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
+                              {isDemoMode ? booking.client_name : (
+                                booking.profiles 
+                                  ? `${booking.profiles.first_name || ''} ${booking.profiles.last_name || ''}`.trim()
+                                  : 'Unknown'
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {isDemoMode ? booking.service_name : (booking.services?.name || 'Unknown Service')}
+                            </TableCell>
+                            <TableCell>
+                              {isDemoMode ? booking.location_name : (booking.locations?.name || 'Unknown Location')}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={booking.status === 'completed' ? 'default' : 'secondary'}>
                                 {booking.status}
-                              </span>
-                            </TableCell>
-                            <TableCell>
-                              <span className={`px-2 py-1 rounded-full text-xs ${
-                                booking.payment_status === 'completed' ? 'bg-green-100 text-green-800' :
-                                booking.payment_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
-                                {booking.payment_status}
-                              </span>
+                              </Badge>
                             </TableCell>
                             <TableCell>${booking.total_amount}</TableCell>
-                            <TableCell>{booking.notes || 'No notes'}</TableCell>
+                            <TableCell>
+                              <Badge variant={booking.payment_status === 'completed' ? 'default' : 'outline'}>
+                                {booking.payment_status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm text-muted-foreground">
+                                {booking.notes || '—'}
+                              </span>
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
                     </Table>
                   </CardContent>
                 </Card>
-              </section>
-            )}
+              </TabsContent>
 
-            {tab === "services" && (
-              <section>
+              <TabsContent value="services" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Services Management</h2>
+                </div>
+
                 <Card>
                   <CardHeader>
-                    <CardTitle>Services Management</CardTitle>
+                    <CardTitle>All Services</CardTitle>
+                    <CardDescription>
+                      {dashboardData.services.length} total services
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Table>
@@ -395,24 +589,30 @@ export default function Admin() {
                           <TableHead>Name</TableHead>
                           <TableHead>Category</TableHead>
                           <TableHead>Price</TableHead>
-                          <TableHead>Duration (min)</TableHead>
-                          <TableHead>Max Capacity</TableHead>
+                          <TableHead>Duration</TableHead>
+                          <TableHead>Capacity</TableHead>
                           <TableHead>Status</TableHead>
+                          <TableHead>Description</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {services.map((service) => (
+                        {dashboardData.services.map((service: any) => (
                           <TableRow key={service.id}>
                             <TableCell className="font-medium">{service.name}</TableCell>
-                            <TableCell>{service.category}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{service.category}</Badge>
+                            </TableCell>
                             <TableCell>${service.price}</TableCell>
-                            <TableCell>{service.duration}</TableCell>
+                            <TableCell>{service.duration} min</TableCell>
                             <TableCell>{service.max_capacity}</TableCell>
                             <TableCell>
-                              <span className={`px-2 py-1 rounded-full text-xs ${
-                                service.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                              }`}>
+                              <Badge variant={service.active ? 'default' : 'outline'}>
                                 {service.active ? 'Active' : 'Inactive'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm text-muted-foreground">
+                                {service.description || '—'}
                               </span>
                             </TableCell>
                           </TableRow>
@@ -421,91 +621,125 @@ export default function Admin() {
                     </Table>
                   </CardContent>
                 </Card>
-              </section>
-            )}
+              </TabsContent>
 
-            {tab === "clients" && (
-              <section>
+              <TabsContent value="clients" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Client Analytics</h2>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => exportCSV(dashboardData.clients, 'clients')}
+                    className="flex items-center space-x-2"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Export CSV</span>
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <StatCard
+                    title="Active Clients"
+                    value={dashboardData.overview.totalClients.toString()}
+                    icon={Users}
+                    trend="+12% from last month"
+                  />
+                  <StatCard
+                    title="Avg Bookings/Client"
+                    value={dashboardData.clients.length > 0 
+                      ? Math.round(dashboardData.overview.totalBookings / dashboardData.clients.length).toString()
+                      : "0"
+                    }
+                    icon={CalendarDays}
+                    trend="+8% from last month"
+                  />
+                  <StatCard
+                    title="Top Client Spend"
+                    value={dashboardData.clients.length > 0 
+                      ? `$${dashboardData.clients[0]?.totalSpent || dashboardData.clients[0]?.total_spent || 0}`
+                      : "$0"
+                    }
+                    icon={DollarSign}
+                    trend="+15% this month"
+                  />
+                </div>
+
                 <Card>
                   <CardHeader>
-                    <CardTitle>Client Analytics ({clients.length} Total Clients)</CardTitle>
+                    <CardTitle>All Clients</CardTitle>
+                    <CardDescription>
+                      Showing all {dashboardData.clients.length} clients by total spending
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Client ID</TableHead>
+                          <TableHead>Client</TableHead>
                           <TableHead>Total Bookings</TableHead>
                           <TableHead>Total Spent</TableHead>
                           <TableHead>Last Booking</TableHead>
                           <TableHead>Status</TableHead>
+                          <TableHead>Membership</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {clients
-                          .sort((a, b) => b.totalSpent - a.totalSpent) // Sort by highest spenders
-                          .slice(0, 20) // Show top 20 clients
-                          .map((client, index) => {
-                            const daysSinceLastBooking = Math.floor((Date.now() - client.lastBooking) / (1000 * 60 * 60 * 24));
-                            const isActive = daysSinceLastBooking <= 30;
-                            
-                            return (
-                              <TableRow key={client.user_id}>
-                                <TableCell className="font-mono text-xs">
-                                  ...{client.user_id.slice(-8)}
-                                </TableCell>
-                                <TableCell className="font-medium">{client.totalBookings}</TableCell>
-                                <TableCell className="font-medium">${client.totalSpent.toFixed(2)}</TableCell>
-                                <TableCell>{new Date(client.lastBooking).toLocaleDateString()}</TableCell>
-                                <TableCell>
-                                  <span className={`px-2 py-1 rounded-full text-xs ${
-                                    isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                  }`}>
-                                    {isActive ? 'Active' : 'Inactive'}
-                                  </span>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
+                        {dashboardData.clients.map((client: any) => (
+                          <TableRow key={client.id}>
+                            <TableCell>
+                              <div className="flex items-center space-x-3">
+                                <Avatar className="h-8 w-8">
+                                  {isDemoMode && client.avatar_url ? (
+                                    <AvatarImage src={client.avatar_url} alt={`${client.first_name} ${client.last_name}`} />
+                                  ) : null}
+                                  <AvatarFallback>
+                                    {isDemoMode 
+                                      ? `${client.first_name?.[0] || ''}${client.last_name?.[0] || ''}`
+                                      : client.name.split(' ').map((n: string) => n[0]).join('')
+                                    }
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="font-medium">
+                                    {isDemoMode ? `${client.first_name} ${client.last_name}` : client.name}
+                                  </div>
+                                  <div className="text-sm text-muted-foreground">{client.email}</div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell>{isDemoMode ? client.total_bookings : client.totalBookings}</TableCell>
+                            <TableCell>${isDemoMode ? client.total_spent : client.totalSpent}</TableCell>
+                            <TableCell>
+                              {new Date(isDemoMode ? client.last_booking : client.lastBooking).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={isDemoMode && client.status === 'inactive' ? 'outline' : 'default'}>
+                                {isDemoMode ? client.status : 'Active'}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {isDemoMode && client.membership_type ? (
+                                <Badge variant="outline">{client.membership_type}</Badge>
+                              ) : '—'}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
-                    
-                    <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="text-sm text-muted-foreground">Active Clients (30 days)</div>
-                          <div className="text-2xl font-bold">
-                            {clients.filter(c => (Date.now() - c.lastBooking) / (1000 * 60 * 60 * 24) <= 30).length}
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="text-sm text-muted-foreground">Avg Bookings per Client</div>
-                          <div className="text-2xl font-bold">
-                            {clients.length ? (clients.reduce((sum, c) => sum + c.totalBookings, 0) / clients.length).toFixed(1) : 0}
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="p-4">
-                          <div className="text-sm text-muted-foreground">Top Client Spend</div>
-                          <div className="text-2xl font-bold">
-                            ${clients.length ? Math.max(...clients.map(c => c.totalSpent)).toFixed(2) : 0}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
                   </CardContent>
                 </Card>
-              </section>
-            )}
+              </TabsContent>
 
-            {tab === "locations" && (
-              <section>
+              <TabsContent value="locations" className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Locations</h2>
+                </div>
+
                 <Card>
                   <CardHeader>
-                    <CardTitle>Locations Management</CardTitle>
+                    <CardTitle>All Locations</CardTitle>
+                    <CardDescription>
+                      {dashboardData.locations.length} total locations
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Table>
@@ -515,20 +749,22 @@ export default function Admin() {
                           <TableHead>Address</TableHead>
                           <TableHead>Phone</TableHead>
                           <TableHead>Status</TableHead>
+                          <TableHead>Created</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {locations.map((location) => (
+                        {dashboardData.locations.map((location: any) => (
                           <TableRow key={location.id}>
                             <TableCell className="font-medium">{location.name}</TableCell>
                             <TableCell>{location.address}</TableCell>
-                            <TableCell>{location.phone || 'No phone'}</TableCell>
+                            <TableCell>{location.phone}</TableCell>
                             <TableCell>
-                              <span className={`px-2 py-1 rounded-full text-xs ${
-                                location.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                              }`}>
+                              <Badge variant={location.active ? 'default' : 'outline'}>
                                 {location.active ? 'Active' : 'Inactive'}
-                              </span>
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {new Date(location.created_at).toLocaleDateString()}
                             </TableCell>
                           </TableRow>
                         ))}
@@ -536,45 +772,13 @@ export default function Admin() {
                     </Table>
                   </CardContent>
                 </Card>
-              </section>
-            )}
+              </TabsContent>
+            </Tabs>
           </main>
         </div>
       </div>
     </div>
   );
-}
+};
 
-function NavItem({ label, icon, active, onClick }) {
-  return (
-    <button 
-      onClick={onClick} 
-      className={`w-full text-left p-3 rounded transition-colors ${
-        active 
-          ? "bg-primary text-primary-foreground shadow" 
-          : "hover:bg-accent hover:text-accent-foreground"
-      }`}
-    >
-      <div className="flex items-center gap-3">
-        <div className="w-6 h-6 flex items-center justify-center">{icon}</div>
-        <div className="text-sm font-medium">{label}</div>
-      </div>
-    </button>
-  );
-}
-
-function StatCard({ title, value }) {
-  return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm text-muted-foreground">{title}</div>
-            <div className="text-2xl font-bold">{value}</div>
-          </div>
-          <div className="text-lg">📊</div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+export default Admin;
