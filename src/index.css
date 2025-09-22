@@ -6,16 +6,16 @@
 
 @layer base {
   :root {
-    /* Brand Colors - From Logo */
-    --taupe-primary: 30 15% 48%;        /* #7A726B - Main brand color */
-    --warm-cream: 32 35% 90%;           /* #EAE4DC - Backgrounds */
-    --charcoal: 20 8% 18%;              /* #2E2C2A - Text */
+    /* Brand Colors - Sleek Grayscale */
+    --taupe-primary: 0 0% 15%;          /* #262626 - Dark charcoal */
+    --warm-cream: 0 0% 98%;             /* #FAFAFA - Clean white */
+    --charcoal: 0 0% 8%;                /* #141414 - Deep black */
     
-    /* Accent Colors - Refined from Instagram Ring */
-    --ember-orange: 24 100% 50%;        /* #FF7A00 - Energy */
-    --coral-pink: 347 100% 65%;         /* #FF4F6D - Warmth */
-    --violet-purple: 268 100% 68%;      /* #A259FF - Creativity */
-    --calm-blue: 207 74% 52%;           /* #2D9CDB - Tranquility */
+    /* Accent Colors - Subtle Grays */
+    --ember-orange: 0 0% 30%;           /* #4D4D4D - Mid gray */
+    --coral-pink: 0 0% 40%;             /* #666666 - Light gray */
+    --violet-purple: 0 0% 50%;          /* #808080 - Medium gray */
+    --calm-blue: 0 0% 60%;              /* #999999 - Lighter gray */
     
     /* Semantic Design System */
     --background: var(--warm-cream);
@@ -30,28 +30,28 @@
     --primary: var(--taupe-primary);
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 32 25% 95%;             /* Lighter cream */
+    --secondary: 0 0% 95%;               /* Light gray */
     --secondary-foreground: var(--charcoal);
 
-    --muted: 32 20% 92%;
-    --muted-foreground: 30 10% 55%;
+    --muted: 0 0% 92%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: var(--coral-pink);
+    --accent: var(--taupe-primary);
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 32 20% 88%;
-    --input: 32 20% 88%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
     --ring: var(--taupe-primary);
 
     --radius: 1rem;                     /* Rounded-xl default */
 
-    /* Wellness-specific design tokens */
-    --gradient-wellness: linear-gradient(135deg, hsl(var(--warm-cream)), hsl(var(--taupe-primary) / 0.1));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--calm-blue) / 0.1), hsl(var(--coral-pink) / 0.1));
-    --gradient-accent: linear-gradient(90deg, hsl(var(--ember-orange)), hsl(var(--coral-pink)));
+    /* Sleek grayscale design tokens */
+    --gradient-wellness: linear-gradient(135deg, hsl(var(--warm-cream)), hsl(0 0% 93%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 8% / 0.9), hsl(0 0% 15% / 0.9));
+    --gradient-accent: linear-gradient(90deg, hsl(0 0% 20%), hsl(0 0% 30%));
     
     /* Shadows for premium feel */
     --shadow-wellness: 0 4px 20px hsl(var(--taupe-primary) / 0.1);
@@ -73,38 +73,38 @@
   }
 
   .dark {
-    /* Dark mode with wellness feel */
-    --background: 20 15% 12%;             /* Dark charcoal */
+    /* Dark mode sleek grayscale */
+    --background: 0 0% 5%;                /* Deep black */
     --foreground: var(--warm-cream);
 
-    --card: 20 12% 15%;
+    --card: 0 0% 8%;
     --card-foreground: var(--warm-cream);
 
-    --popover: 20 12% 15%;
+    --popover: 0 0% 8%;
     --popover-foreground: var(--warm-cream);
 
     --primary: var(--warm-cream);
     --primary-foreground: var(--charcoal);
 
-    --secondary: 20 10% 20%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: var(--warm-cream);
 
-    --muted: 20 8% 18%;
-    --muted-foreground: 30 8% 65%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: var(--coral-pink);
-    --accent-foreground: 0 0% 100%;
+    --accent: 0 0% 90%;
+    --accent-foreground: 0 0% 8%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 20 8% 25%;
-    --input: 20 8% 25%;
-    --ring: var(--coral-pink);
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 0% 90%;
     
     /* Dark mode gradients */
-    --gradient-wellness: linear-gradient(135deg, hsl(var(--background)), hsl(var(--taupe-primary) / 0.2));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--calm-blue) / 0.2), hsl(var(--coral-pink) / 0.2));
+    --gradient-wellness: linear-gradient(135deg, hsl(0 0% 5%), hsl(0 0% 8%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 8% / 0.9), hsl(0 0% 12% / 0.9));
     
     --sidebar-background: var(--background);
     --sidebar-foreground: var(--foreground);
