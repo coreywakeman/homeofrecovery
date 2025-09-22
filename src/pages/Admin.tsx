@@ -46,6 +46,7 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("Admin component mounted");
     loadDashboardData();
   }, []);
 
@@ -142,6 +143,7 @@ export default function Admin() {
   };
 
   if (loading) {
+    console.log("Admin loading state");
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -152,6 +154,8 @@ export default function Admin() {
     );
   }
 
+  console.log("Admin rendering main content");
+  
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
