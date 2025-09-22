@@ -18,7 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import { generateDemoData } from "@/lib/demoData";
 import { useState, useEffect } from "react";
 
-import { CalendarDays, Users, PieChart, DollarSign, Settings, Bell, LogOut, MapPin, Download } from "lucide-react";
+import { CalendarDays, Users, PieChart, DollarSign, Settings, Bell, LogOut, MapPin, Download, Home } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -317,6 +317,10 @@ const Admin = () => {
             <p className="text-muted-foreground">Wellness & Recovery Center Management</p>
           </div>
           <div className="flex items-center space-x-4">
+            <Button variant="outline" onClick={() => navigate('/')}>
+              <Home className="h-4 w-4 mr-2" />
+              Homepage
+            </Button>
             <Button variant="outline" size="icon">
               <Bell className="h-4 w-4" />
             </Button>
