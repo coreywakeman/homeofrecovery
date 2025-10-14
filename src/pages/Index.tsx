@@ -37,7 +37,7 @@ const Index = () => {
         </Link>
 
         {/* Nav Buttons */}
-        <div className="flex gap-3 md:gap-4 opacity-0 animate-fade-in" style={{ animationDelay: "400ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
+        <div className="flex items-start gap-3 md:gap-4 opacity-0 animate-fade-in" style={{ animationDelay: "400ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
           <Button 
             variant="ghost"
             className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all duration-300 rounded-xl px-4 md:px-6"
