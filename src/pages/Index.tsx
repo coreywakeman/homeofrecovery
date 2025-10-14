@@ -27,7 +27,7 @@ const Index = () => {
       </div>
 
       {/* Minimal Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-50 px-6 md:px-12 pt-2 pb-4 flex items-center justify-between animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms" }}>
+      <nav className="absolute top-0 left-0 right-0 z-50 px-6 md:px-12 pt-2 pb-4 flex items-start justify-between animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms" }}>
         {/* Logo */}
         <Link to="/" className="opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
           <Logo 
