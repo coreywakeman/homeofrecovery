@@ -41,7 +41,7 @@ const Header = () => {
             <img 
               src={logoWalnut} 
               alt="Home of Recovery" 
-              className="h-10 md:h-12 w-auto"
+              className="h-10 md:h-12 w-auto mix-blend-multiply dark:mix-blend-lighten"
             />
           </Link>
 

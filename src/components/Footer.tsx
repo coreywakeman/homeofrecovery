@@ -26,7 +26,7 @@ const Footer = () => {
             <img 
               src={logoWhite} 
               alt="Home of Recovery" 
-              className="h-12 w-auto mb-4"
+              className="h-12 w-auto mb-4 brightness-0 invert"
             />
             <p className="text-cream/80 leading-relaxed mb-6">
               Dubbo's first dedicated recovery and wellness facility, designed to support both physical and mental wellbeing through industry-leading recovery services.
