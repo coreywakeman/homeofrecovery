@@ -1,23 +1,91 @@
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import PrimaryMembershipSection from "@/components/PrimaryMembershipSection";
-import ServicesSection from "@/components/ServicesSection";
-import GroupBookingsSection from "@/components/GroupBookingsSection";
-import MembershipsSection from "@/components/MembershipsSection";
-import Footer from "@/components/Footer";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import heroImage from "@/assets/hero-wellness.jpg";
+import logoWalnut from "@/assets/logo-walnut.png";
 
 const Index = () => {
+  useEffect(() => {
+    // Disable scroll on homepage
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <Hero />
-        <PrimaryMembershipSection />
-        <ServicesSection />
-        <GroupBookingsSection />
-        <MembershipsSection />
-      </main>
-      <Footer />
+    <div className="relative w-screen h-screen overflow-hidden">
+      {/* Background Image with Gradient Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center animate-fade-in"
+        style={{ 
+          backgroundImage: `url(${heroImage})`,
+          animationDuration: "800ms"
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-walnut/60 via-walnut/40 to-transparent" />
+      </div>
+
+      {/* Minimal Navigation */}
+      <nav className="absolute top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex items-center justify-between animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms" }}>
+        {/* Logo */}
+        <Link to="/" className="opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
+          <img 
+            src={logoWalnut} 
+            alt="Home of Recovery" 
+            className="h-10 md:h-12 w-auto opacity-90 hover:opacity-100 transition-opacity"
+          />
+        </Link>
+
+        {/* Nav Buttons */}
+        <div className="flex gap-3 md:gap-4 opacity-0 animate-fade-in" style={{ animationDelay: "400ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
+          <Button 
+            variant="ghost"
+            className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all duration-300 rounded-xl px-4 md:px-6"
+            asChild
+          >
+            <Link to="/memberships">Membership</Link>
+          </Button>
+          <Button 
+            variant="ghost"
+            className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all duration-300 rounded-xl px-4 md:px-6"
+            asChild
+          >
+            <Link to="/memberships#intro-offer">Intro Offer</Link>
+          </Button>
+        </div>
+      </nav>
+
+      {/* Centered Frosted Glass Card */}
+      <div className="absolute inset-0 flex items-center justify-center px-4">
+        <div 
+          className="max-w-5xl w-full opacity-0 animate-fade-in"
+          style={{ 
+            animationDelay: "100ms", 
+            animationDuration: "800ms",
+            animationFillMode: "forwards"
+          }}
+        >
+          <div 
+            className="backdrop-blur-[14px] bg-white/[0.08] border border-white/20 rounded-[24px] p-12 md:p-16 lg:p-20 text-center shadow-2xl"
+            style={{
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)"
+            }}
+          >
+            <h1 
+              className="font-bold text-white/95 leading-tight tracking-wide"
+              style={{
+                fontSize: "clamp(2rem, 5vw, 4.5rem)",
+                fontFamily: "DM Sans, sans-serif",
+                letterSpacing: "0.02em"
+              }}
+            >
+              Dubbo's destination for all things recovery and wellness
+            </h1>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
