@@ -32,7 +32,7 @@ const Index = () => {
         <Link to="/" className="opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
           <Logo 
             variant="white"
-            className="h-16 md:h-24 lg:h-28 w-auto hover:opacity-90 transition-opacity"
+            className="h-32 md:h-48 lg:h-56 w-auto hover:opacity-90 transition-opacity"
           />
         </Link>
 
