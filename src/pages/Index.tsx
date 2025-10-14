@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-icebath.jpg";
+import heroImage from "@/assets/hero-icebath-new.jpg";
 import Logo from "@/components/Logo";
 
 const Index = () => {
