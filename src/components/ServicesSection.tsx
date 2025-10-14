@@ -1,237 +1,127 @@
-import { Clock, Users, Thermometer, Zap, Waves, Activity, Star, CheckCircle, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Flame, Zap, Waves, Check } from "lucide-react";
+
+const services = [
+  {
+    name: "Infrared Sauna",
+    icon: Flame,
+    description: "Our full-spectrum infrared sauna uses advanced infrared heaters to emit near, mid, and far-infrared wavelengths. These wavelengths penetrate the skin and underlying tissues directly, gently raising core body temperature without overheating the air around you. This process stimulates circulation, increases metabolic activity, and promotes natural detoxification through sweating. The deep tissue penetration can help relax muscles, reduce tension, and support recovery, while the chromotherapy lighting enhances the session by influencing mood and promoting a sense of wellbeing. By combining heat, light, and targeted infrared energy, the sauna provides a scientifically supported environment for both physical and mental restoration.",
+    duration: "40 minutes",
+    price: "$39",
+    capacity: "1 person (can add a guest for $15)",
+    benefits: [
+      "Improved circulation, supporting cardiovascular health",
+      "Muscle recovery",
+      "Detoxification",
+      "Stress reduction",
+      "Pain relief",
+      "Improved skin health",
+      "Support for immune system function"
+    ]
+  },
+  {
+    name: "Compression Therapy",
+    icon: Zap,
+    description: "Compression therapy uses advanced pneumatic compression devices to deliver controlled, rhythmic pressure to the limbs. This pressure enhances blood flow and lymphatic drainage, helping to reduce swelling, improve circulation, and accelerate the removal of metabolic waste from muscles. By promoting optimal blood flow, compression therapy can support faster recovery after exercise, reduce muscle fatigue, and aid in overall performance. The session provides a comfortable, guided experience that complements other recovery methods, helping the body restore itself efficiently.",
+    duration: "30 minutes / 1 hour",
+    price: "$33 / $48",
+    capacity: "1 person",
+    benefits: [
+      "Enhances circulation and blood flow",
+      "Reduces swelling and fluid retention",
+      "Speeds up muscle recovery",
+      "Reduces soreness",
+      "Helps decrease fatigue",
+      "Supports overall performance"
+    ]
+  },
+  {
+    name: "Contrast Therapy",
+    icon: Waves,
+    description: "Contrast therapy combines sessions in our warm bath and ice bath to alternate between heat and cold. The warm bath promotes blood vessel dilation, relaxation, and muscle loosening, while the ice bath triggers vessel constriction and reduces inflammation. This alternating cycle enhances circulation, accelerates recovery, decreases muscle soreness, and supports overall physical resilience, all while providing an invigorating and restorative experience for the body and mind.",
+    duration: "30 minutes",
+    price: "$20",
+    capacity: "Shared space",
+    benefits: [
+      "Boosts circulation through alternating heat and cold",
+      "Reduces inflammation and eases muscle soreness",
+      "Speeds up recovery",
+      "Enhances overall physical resilience",
+      "Provides a refreshing, restorative experience"
+    ]
+  }
+];
 
 const ServicesSection = () => {
-  const services = [
-    {
-      name: "Cryotherapy",
-      description: "Advanced cold therapy system utilizing nitrogen-cooled chambers to trigger the body's natural healing response",
-      duration: "3-5 min",
-      capacity: "1 person",
-      price: "$65",
-      originalPrice: "$85",
-      icon: <Thermometer className="w-8 h-8 text-calm-blue" />,
-      color: "from-calm-blue/20 to-violet/20",
-      benefits: ["Reduces inflammation by up to 80%", "Accelerates muscle recovery", "Boosts collagen production", "Enhances mental clarity"],
-      category: "Recovery",
-      featured: true
-    },
-    {
-      name: "NormaTec Compression",
-      description: "Professional-grade pneumatic compression therapy using patented pulse technology for optimal recovery",
-      duration: "30 min",
-      capacity: "2 units",
-      price: "$55", 
-      originalPrice: "$70",
-      icon: <Activity className="w-8 h-8 text-coral" />,
-      color: "from-coral/20 to-ember/20",
-      benefits: ["Improves circulation by 40%", "Reduces muscle fatigue", "Accelerates lactic acid removal", "Prevents injury"],
-      category: "Performance",
-      featured: false
-    },
-    {
-      name: "Theragun Percussion",
-      description: "Precision percussion therapy targeting deep muscle tissue with customizable intensity levels",
-      duration: "25 min",
-      capacity: "1 person",
-      price: "$45",
-      originalPrice: "$60",
-      icon: <Zap className="w-8 h-8 text-ember" />,
-      color: "from-ember/20 to-violet/20",
-      benefits: ["Releases muscle tension", "Increases range of motion", "Reduces DOMS by 30%", "Improves blood flow"],
-      category: "Therapy",
-      featured: false
-    },
-    {
-      name: "Infrared + Red Light Sauna",
-      description: "Dual-spectrum therapy combining infrared heat with red light photobiomodulation for cellular regeneration",
-      duration: "30 min",
-      capacity: "2 people",
-      price: "$75",
-      originalPrice: "$95",
-      icon: <Waves className="w-8 h-8 text-violet" />,
-      color: "from-violet/20 to-calm-blue/20",
-      benefits: ["Stimulates cellular repair", "Improves skin elasticity", "Enhances mitochondrial function", "Promotes deeper sleep"],
-      category: "Wellness",
-      featured: false
-    },
-    {
-      name: "Elite Recovery Protocol",
-      description: "Comprehensive 90-minute experience combining our most advanced recovery technologies",
-      duration: "90 min",
-      capacity: "1 person",
-      price: "$185",
-      originalPrice: "$250",
-      icon: <Star className="w-8 h-8 text-primary" />,
-      color: "from-primary/20 to-secondary/20",
-      benefits: ["Complete body optimization", "Maximum recovery benefits", "Personalized therapy plan", "Priority booking access"],
-      category: "Premium",
-      featured: true
-    }
-  ];
-
-  const stats = [
-    { number: "15,000+", label: "Sessions Completed", description: "Trusted by athletes and wellness enthusiasts" },
-    { number: "98%", label: "Client Satisfaction", description: "Consistently rated 5-star experience" },
-    { number: "48hrs", label: "Average Recovery Time", description: "Significantly reduced compared to traditional methods" },
-    { number: "24/7", label: "Expert Support", description: "Professional guidance whenever you need it" }
-  ];
-
   return (
-    <section id="services" className="py-24 lg:py-32 bg-gradient-to-b from-background via-background/50 to-muted/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <div className="text-center mb-20 animate-fade-in">
-          <Badge variant="outline" className="mb-6 text-sm font-medium px-4 py-2">
-            RECOVERY TECHNOLOGY
+    <section id="services" className="py-20 bg-background">
+      <div className="container px-4 mx-auto">
+        <div className="text-center mb-16 animate-fade-in">
+          <Badge variant="outline" className="mb-4 text-sm px-4 py-1">
+            Premium Services
           </Badge>
-          <h2 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-8 leading-tight">
-            Advanced Recovery
-            <span className="block bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Technology at Your Service
-            </span>
+          <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4 text-foreground">
+            Recovery Modalities
           </h2>
-          <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-            Experience cutting-edge wellness equipment designed to accelerate your recovery, 
-            reduce inflammation, and optimize your body's natural healing processes through 
-            scientifically-proven methodologies.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Industry-leading recovery services backed by science
           </p>
         </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-          {stats.map((stat, index) => (
-            <div 
-              key={stat.label} 
-              className="text-center animate-slide-up"
-              style={{animationDelay: `${index * 0.1}s`}}
-            >
-              <div className="text-3xl lg:text-4xl font-bold text-primary mb-2">
-                {stat.number}
-              </div>
-              <div className="font-semibold text-foreground mb-1">
-                {stat.label}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {stat.description}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-16">
-          {services.map((service, index) => (
-            <Card 
-              key={service.name} 
-              className={`wellness-card group relative overflow-hidden animate-slide-up hover:shadow-lg transition-all duration-300 ${
-                service.featured ? 'ring-2 ring-primary/30 shadow-lg' : ''
-              }`}
-              style={{animationDelay: `${index * 0.1}s`}}
-            >
-              {service.featured && (
-                <div className="absolute top-3 right-3 z-10">
-                  <Badge className="bg-primary text-primary-foreground text-xs px-2 py-1">
-                    Popular
-                  </Badge>
-                </div>
-              )}
-              
-              <CardHeader className="pb-4 p-4">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-all duration-300 shadow-md`}>
-                  <div className="scale-75">
-                    {service.icon}
-                  </div>
-                </div>
-                
-                <div>
-                  <Badge variant="secondary" className="mb-2 text-xs px-2 py-0.5">
-                    {service.category}
-                  </Badge>
-                  <CardTitle className="font-heading text-lg text-foreground mb-2 leading-tight">
-                    {service.name}
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm leading-snug line-clamp-2">
-                    {service.description}
-                  </CardDescription>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="pt-0 p-4">
-                {/* Pricing & Info */}
-                <div className="flex items-center justify-between mb-4 p-3 bg-muted/30 rounded-lg">
-                  <div className="space-y-1">
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {service.duration}
-                    </div>
-                    <div className="flex items-center text-xs text-muted-foreground">
-                      <Users className="w-3 h-3 mr-1" />
-                      {service.capacity}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-bold text-primary">
-                      {service.price}
-                    </div>
-                    {service.originalPrice && (
-                      <div className="text-xs text-muted-foreground line-through">
-                        {service.originalPrice}
+        <div className="grid gap-8 max-w-7xl mx-auto">
+          {services.map((service, index) => {
+            const Icon = service.icon;
+            return (
+              <Card key={index} className="wellness-card overflow-hidden">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="md:col-span-1 bg-gradient-accent p-8 flex flex-col justify-between">
+                    <div>
+                      <Icon className="h-12 w-12 text-cream mb-4" />
+                      <CardTitle className="font-serif text-3xl mb-4 text-cream">
+                        {service.name}
+                      </CardTitle>
+                      <div className="space-y-2 text-cream/90">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary" className="bg-cream/20 text-cream border-0">
+                            {service.duration}
+                          </Badge>
+                        </div>
+                        <div className="text-2xl font-bold font-serif text-cream">
+                          {service.price}
+                        </div>
+                        <div className="text-sm text-cream/80">
+                          {service.capacity}
+                        </div>
                       </div>
-                    )}
+                    </div>
+                    <Button className="w-full mt-6 bg-cream text-walnut hover:bg-cream/90">
+                      Book Now
+                    </Button>
+                  </div>
+                  
+                  <div className="md:col-span-2 p-8">
+                    <CardDescription className="text-base text-foreground mb-6 leading-relaxed">
+                      {service.description}
+                    </CardDescription>
+                    
+                    <div>
+                      <h4 className="font-semibold text-lg mb-4 text-foreground">Benefits:</h4>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        {service.benefits.map((benefit, idx) => (
+                          <div key={idx} className="flex items-start gap-2">
+                            <Check className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                {/* Key Benefits - Condensed */}
-                <div className="mb-4">
-                  <h4 className="font-medium text-foreground mb-2 text-sm flex items-center">
-                    <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
-                    Benefits
-                  </h4>
-                  <ul className="space-y-1">
-                    {service.benefits.slice(0, 3).map((benefit, idx) => (
-                      <li key={idx} className="flex items-start text-xs text-muted-foreground">
-                        <div className="w-1.5 h-1.5 bg-gradient-to-r from-primary to-secondary rounded-full mr-2 mt-1.5 flex-shrink-0"></div>
-                        <span className="leading-relaxed">{benefit}</span>
-                      </li>
-                    ))}
-                    {service.benefits.length > 3 && (
-                      <li className="text-xs text-muted-foreground/70 italic">
-                        +{service.benefits.length - 3} more benefits
-                      </li>
-                    )}
-                  </ul>
-                </div>
-                
-                <Button className="w-full btn-wellness py-2 text-sm group">
-                  Book Now
-                  <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* CTA Section */}
-        <div className="text-center bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 rounded-3xl p-12 lg:p-16">
-          <h3 className="font-heading text-3xl lg:text-4xl font-bold text-foreground mb-6">
-            Ready to Transform Your Recovery?
-          </h3>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of athletes, fitness enthusiasts, and wellness seekers who trust our 
-            advanced recovery technology to optimize their performance and wellbeing.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="btn-wellness text-lg px-8 py-6">
-              View All Availability
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button variant="outline" size="lg" className="btn-ghost-wellness text-lg px-8 py-6">
-              Schedule Consultation
-            </Button>
-          </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>

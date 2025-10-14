@@ -6,57 +6,51 @@
 
 @layer base {
   :root {
-    /* Brand Colors - Sleek Grayscale */
-    --taupe-primary: 0 0% 15%;          /* #262626 - Dark charcoal */
-    --warm-cream: 0 0% 98%;             /* #FAFAFA - Clean white */
-    --charcoal: 0 0% 8%;                /* #141414 - Deep black */
-    
-    /* Accent Colors - Subtle Grays */
-    --ember-orange: 0 0% 30%;           /* #4D4D4D - Mid gray */
-    --coral-pink: 0 0% 40%;             /* #666666 - Light gray */
-    --violet-purple: 0 0% 50%;          /* #808080 - Medium gray */
-    --calm-blue: 0 0% 60%;              /* #999999 - Lighter gray */
+    /* Brand Colors - Home of Recovery */
+    --walnut: 20 15% 29%;               /* #524942 - Dark warm brown */
+    --mid-taupe: 25 8% 53%;             /* #8d857c - Mid warm taupe */
+    --cream: 40 26% 91%;                /* #e8e3dc - Warm cream */
     
     /* Semantic Design System */
-    --background: var(--warm-cream);
-    --foreground: var(--charcoal);
+    --background: var(--cream);
+    --foreground: var(--walnut);
 
     --card: 0 0% 100%;
-    --card-foreground: var(--charcoal);
+    --card-foreground: var(--walnut);
 
     --popover: 0 0% 100%;
-    --popover-foreground: var(--charcoal);
+    --popover-foreground: var(--walnut);
 
-    --primary: var(--taupe-primary);
-    --primary-foreground: 0 0% 100%;
+    --primary: var(--walnut);
+    --primary-foreground: var(--cream);
 
-    --secondary: 0 0% 95%;               /* Light gray */
-    --secondary-foreground: var(--charcoal);
+    --secondary: var(--mid-taupe);
+    --secondary-foreground: var(--cream);
 
-    --muted: 0 0% 92%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 35 15% 88%;
+    --muted-foreground: 20 8% 45%;
 
-    --accent: var(--taupe-primary);
-    --accent-foreground: 0 0% 100%;
+    --accent: var(--mid-taupe);
+    --accent-foreground: var(--cream);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 88%;
-    --input: 0 0% 88%;
-    --ring: var(--taupe-primary);
+    --border: 30 12% 82%;
+    --input: 30 12% 82%;
+    --ring: var(--walnut);
 
     --radius: 1rem;                     /* Rounded-xl default */
 
-    /* Sleek grayscale design tokens */
-    --gradient-wellness: linear-gradient(135deg, hsl(var(--warm-cream)), hsl(0 0% 93%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 8% / 0.9), hsl(0 0% 15% / 0.9));
-    --gradient-accent: linear-gradient(90deg, hsl(0 0% 20%), hsl(0 0% 30%));
+    /* Home of Recovery design tokens */
+    --gradient-wellness: linear-gradient(135deg, hsl(var(--cream)), hsl(35 20% 88%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--walnut) / 0.9), hsl(var(--mid-taupe) / 0.9));
+    --gradient-accent: linear-gradient(90deg, hsl(var(--walnut)), hsl(var(--mid-taupe)));
     
     /* Shadows for premium feel */
-    --shadow-wellness: 0 4px 20px hsl(var(--taupe-primary) / 0.1);
-    --shadow-card: 0 2px 10px hsl(var(--taupe-primary) / 0.05);
-    --shadow-elevated: 0 8px 30px hsl(var(--taupe-primary) / 0.15);
+    --shadow-wellness: 0 4px 20px hsl(var(--walnut) / 0.1);
+    --shadow-card: 0 2px 10px hsl(var(--walnut) / 0.05);
+    --shadow-elevated: 0 8px 30px hsl(var(--walnut) / 0.15);
     
     /* Animation timing */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,38 +67,38 @@
   }
 
   .dark {
-    /* Dark mode sleek grayscale */
-    --background: 0 0% 5%;                /* Deep black */
-    --foreground: var(--warm-cream);
+    /* Dark mode */
+    --background: 20 15% 12%;
+    --foreground: var(--cream);
 
-    --card: 0 0% 8%;
-    --card-foreground: var(--warm-cream);
+    --card: 20 15% 15%;
+    --card-foreground: var(--cream);
 
-    --popover: 0 0% 8%;
-    --popover-foreground: var(--warm-cream);
+    --popover: 20 15% 15%;
+    --popover-foreground: var(--cream);
 
-    --primary: var(--warm-cream);
-    --primary-foreground: var(--charcoal);
+    --primary: var(--cream);
+    --primary-foreground: var(--walnut);
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: var(--warm-cream);
+    --secondary: 20 15% 20%;
+    --secondary-foreground: var(--cream);
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 20 15% 18%;
+    --muted-foreground: 25 8% 65%;
 
-    --accent: 0 0% 90%;
-    --accent-foreground: 0 0% 8%;
+    --accent: var(--mid-taupe);
+    --accent-foreground: var(--walnut);
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 90%;
+    --border: 20 15% 22%;
+    --input: 20 15% 22%;
+    --ring: var(--cream);
     
     /* Dark mode gradients */
-    --gradient-wellness: linear-gradient(135deg, hsl(0 0% 5%), hsl(0 0% 8%));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 8% / 0.9), hsl(0 0% 12% / 0.9));
+    --gradient-wellness: linear-gradient(135deg, hsl(20 15% 12%), hsl(20 15% 18%));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--walnut) / 0.95), hsl(var(--mid-taupe) / 0.85));
     
     --sidebar-background: var(--background);
     --sidebar-foreground: var(--foreground);
@@ -128,12 +122,16 @@
   
   /* Typography Classes */
   .font-heading {
-    font-family: 'Poppins', system-ui, sans-serif;
-    font-weight: 600;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 700;
   }
   
   .font-body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  
+  .font-serif {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 }
 

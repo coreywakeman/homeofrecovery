@@ -1,64 +1,44 @@
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Instagram, Facebook, Twitter } from "lucide-react";
+import { Mail, Instagram, Facebook, Twitter } from "lucide-react";
+import logoWhite from "@/assets/logo-white.png";
 
 const Footer = () => {
-  const locations = [
-    {
-      name: "Downtown Studio",
-      address: "123 Wellness Ave, Downtown",
-      phone: "(555) 123-4567"
-    },
-    {
-      name: "Westside Center", 
-      address: "456 Recovery Blvd, Westside",
-      phone: "(555) 234-5678"
-    },
-    {
-      name: "Northside Clinic",
-      address: "789 Healing St, Northside", 
-      phone: "(555) 345-6789"
-    }
-  ];
-
   const quickLinks = [
-    "Class Schedule",
-    "Book Appointment", 
-    "Membership Plans",
-    "Coach Profiles",
-    "About Us",
-    "Contact"
+    { name: "Services", href: "#services" },
+    { name: "Memberships", href: "#memberships" },
+    { name: "Packs", href: "#packs" },
+    { name: "Group Bookings", href: "#group-bookings" },
   ];
 
   const resources = [
     "Recovery Blog",
     "Wellness Tips",
-    "Member Portal",
-    "Insurance Info",
     "Privacy Policy",
     "Terms of Service"
   ];
 
   return (
-    <footer className="bg-charcoal text-cream">
+    <footer className="bg-walnut text-cream">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <h3 className="font-heading text-2xl font-bold mb-4 text-cream">
-              Home of Recovery
-            </h3>
+            <img 
+              src={logoWhite} 
+              alt="Home of Recovery" 
+              className="h-12 w-auto mb-4"
+            />
             <p className="text-cream/80 leading-relaxed mb-6">
-              Dedicated to your complete wellness journey through expert guidance, 
-              supportive community, and holistic healing practices.
+              Dubbo's first dedicated recovery and wellness facility, designed to support both physical and mental wellbeing through industry-leading recovery services.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-cream/60 hover:text-coral transition-colors">
+              <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-cream/60 hover:text-coral transition-colors">
+              <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-cream/60 hover:text-coral transition-colors">
+              <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
@@ -71,25 +51,9 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-cream/80 hover:text-coral transition-colors">
-                    {link}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="font-heading text-lg font-semibold mb-4 text-cream">
-              Resources
-            </h4>
-            <ul className="space-y-2">
-              {resources.map((resource) => (
-                <li key={resource}>
-                  <a href="#" className="text-cream/80 hover:text-coral transition-colors">
-                    {resource}
+                <li key={link.name}>
+                  <a href={link.href} className="text-cream/80 hover:text-mid-taupe transition-colors">
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -103,38 +67,15 @@ const Footer = () => {
             </h4>
             <div className="space-y-4">
               <div className="flex items-start">
-                <Mail className="w-5 h-5 text-coral mr-2 mt-0.5 flex-shrink-0" />
-                <a href="mailto:hello@homeofrecovery.com" className="text-cream/80 hover:text-coral transition-colors">
-                  hello@homeofrecovery.com
+                <Mail className="w-5 h-5 text-mid-taupe mr-2 mt-0.5 flex-shrink-0" />
+                <a href="mailto:info@homeofrecovery.au" className="text-cream/80 hover:text-mid-taupe transition-colors">
+                  info@homeofrecovery.au
                 </a>
               </div>
-              <div className="flex items-start">
-                <Phone className="w-5 h-5 text-coral mr-2 mt-0.5 flex-shrink-0" />
-                <span className="text-cream/80">(555) 123-HEAL</span>
-              </div>
+              <p className="text-sm text-cream/70">
+                Located in Dubbo, NSW
+              </p>
             </div>
-          </div>
-        </div>
-
-        {/* Locations */}
-        <div className="border-t border-cream/20 pt-8 mb-8">
-          <h4 className="font-heading text-lg font-semibold mb-6 text-cream text-center">
-            Our Locations
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {locations.map((location) => (
-              <div key={location.name} className="text-center">
-                <h5 className="font-medium text-cream mb-2">{location.name}</h5>
-                <div className="flex items-start justify-center mb-1">
-                  <MapPin className="w-4 h-4 text-coral mr-1 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-cream/80">{location.address}</span>
-                </div>
-                <div className="flex items-center justify-center">
-                  <Phone className="w-4 h-4 text-coral mr-1 flex-shrink-0" />
-                  <span className="text-sm text-cream/80">{location.phone}</span>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
 
@@ -144,20 +85,17 @@ const Footer = () => {
             © 2024 Home of Recovery. All rights reserved.
           </p>
           <div className="flex space-x-6 text-sm">
-            <a href="#" className="text-cream/60 hover:text-coral transition-colors">
+            <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-cream/60 hover:text-coral transition-colors">
+            <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
               Terms of Service
             </a>
-            <a href="#" className="text-cream/60 hover:text-coral transition-colors">
-              Accessibility
-            </a>
-            <Link to="/admin" className="text-cream/60 hover:text-coral transition-colors">
-              Admin Dashboard
+            <Link to="/admin" className="text-cream/60 hover:text-mid-taupe transition-colors">
+              Admin
             </Link>
-            <Link to="/members" className="text-cream/60 hover:text-coral transition-colors">
-              Members Hub
+            <Link to="/members" className="text-cream/60 hover:text-mid-taupe transition-colors">
+              Members
             </Link>
           </div>
         </div>

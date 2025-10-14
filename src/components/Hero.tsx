@@ -1,69 +1,62 @@
-import { ArrowRight, Calendar, Users, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-recovery-center.jpg";
+import heroImage from "@/assets/hero-wellness.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center pt-16 lg:pt-20">
-      {/* Background with overlay */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src={heroImage} 
-          alt="Modern wellness recovery center with ice baths and recovery equipment"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/70 to-background/50"></div>
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroImage})` }}
+      >
+        <div className="absolute inset-0 hero-gradient" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl">
-          <div className="animate-fade-in">
-            <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-6">
-              Advanced Recovery
-              <span className="block text-transparent bg-gradient-accent bg-clip-text">
-                Technology Center
-              </span>
-            </h1>
-            
-            <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-8 max-w-2xl leading-relaxed">
-              Experience cutting-edge wellness equipment including ice baths, compression therapy, 
-              red light saunas, and percussion massage for optimal recovery and performance.
-            </p>
+      <div className="container relative z-10 px-4 py-20 mx-auto text-center text-white">
+        <div className="max-w-4xl mx-auto animate-fade-in">
+          <h1 className="font-serif text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Dubbo's destination for all things recovery and wellness
+          </h1>
+          <p className="text-xl md:text-2xl mb-12 text-cream/90 max-w-3xl mx-auto leading-relaxed">
+            Home of Recovery is Dubbo's first dedicated recovery and wellness facility, designed to support both physical and mental wellbeing through industry-leading recovery services.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              size="lg" 
+              className="bg-cream text-walnut hover:bg-cream/90 text-lg px-8 py-6 rounded-xl font-semibold w-full sm:w-auto"
+              asChild
+            >
+              <a href="#memberships">Become a Member</a>
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-2 border-cream text-cream hover:bg-cream/10 text-lg px-8 py-6 rounded-xl font-semibold w-full sm:w-auto"
+              asChild
+            >
+              <a href="#services">Explore Services</a>
+            </Button>
+          </div>
+        </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Button className="btn-accent h-14 px-8 text-lg">
-                Book Session
-                <Calendar className="ml-2 h-5 w-5" />
-              </Button>
-              <Button variant="outline" className="btn-ghost-wellness h-14 px-8 text-lg">
-                Learn More
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 pt-8 border-t border-border/50">
-              <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-2">200+</div>
-                <div className="text-sm lg:text-base text-muted-foreground">Happy Clients</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-2">5</div>
-                <div className="text-sm lg:text-base text-muted-foreground">Recovery Modalities</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-primary mb-2">3</div>
-                <div className="text-sm lg:text-base text-muted-foreground">Locations</div>
-              </div>
-            </div>
+        {/* Key Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-20 animate-slide-up">
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            <div className="text-4xl font-bold mb-2 font-serif">500+</div>
+            <div className="text-cream/80">Happy Clients</div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            <div className="text-4xl font-bold mb-2 font-serif">3</div>
+            <div className="text-cream/80">Premium Services</div>
+          </div>
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+            <div className="text-4xl font-bold mb-2 font-serif">Dubbo</div>
+            <div className="text-cream/80">Locations</div>
           </div>
         </div>
       </div>
-
-      {/* Floating elements for visual interest */}
-      <div className="absolute top-1/4 right-10 w-20 h-20 bg-coral/10 rounded-full animate-float hidden lg:block"></div>
-      <div className="absolute bottom-1/4 left-10 w-16 h-16 bg-calm-blue/10 rounded-full animate-float hidden lg:block" style={{animationDelay: '1s'}}></div>
     </section>
   );
 };

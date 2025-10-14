@@ -14,9 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        'heading': ['Poppins', 'system-ui', 'sans-serif'],
-        'body': ['Inter', 'system-ui', 'sans-serif'],
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'heading': ['DM Sans', 'system-ui', 'sans-serif'],
+        'body': ['DM Sans', 'system-ui', 'sans-serif'],
+        'sans': ['DM Sans', 'system-ui', 'sans-serif'],
+        'serif': ['Playfair Display', 'Georgia', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -25,22 +26,10 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         
-        // Brand colors
-        'taupe': {
-          DEFAULT: "hsl(var(--taupe-primary))",
-          primary: "hsl(var(--taupe-primary))",
-        },
-        'cream': {
-          DEFAULT: "hsl(var(--warm-cream))",
-          warm: "hsl(var(--warm-cream))",
-        },
-        'charcoal': "hsl(var(--charcoal))",
-        
-        // Accent colors
-        'ember': "hsl(var(--ember-orange))",
-        'coral': "hsl(var(--coral-pink))",
-        'violet': "hsl(var(--violet-purple))",
-        'calm-blue': "hsl(var(--calm-blue))",
+        // Brand colors - Home of Recovery
+        'walnut': "hsl(var(--walnut))",
+        'mid-taupe': "hsl(var(--mid-taupe))",
+        'cream': "hsl(var(--cream))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

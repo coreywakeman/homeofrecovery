@@ -1,71 +1,66 @@
-import { Check, Star, Zap } from "lucide-react";
+import { Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const MembershipsSection = () => {
   const plans = [
     {
-      name: "Drop-In",
-      price: "45",
-      period: "per session",
-      description: "Perfect for trying our recovery services",
+      name: "5 Session Pack",
+      price: "160",
+      period: "5 sessions",
+      description: "Great starter pack for new members",
       features: [
-        "Access to any service",
-        "No commitment",
-        "4-hour cancellation",
-        "Flexible scheduling"
+        "5 sessions to any service",
+        "Valid for 2 months",
+        "Mix and match services",
+        "Save $15 vs drop-in rate",
       ],
       popular: false,
-      buttonText: "Book Now",
-      color: "from-taupe/10 to-coral/10"
     },
     {
-      name: "Recovery Pack",
-      price: "360",
+      name: "10 Session Pack",
+      price: "300",
       period: "10 sessions",
-      description: "Best value for regular recovery",
+      description: "Best value for regular visitors",
       features: [
-        "10 sessions to use anytime",
-        "6-month expiry",
+        "10 sessions to any service",
+        "Valid for 3 months",
+        "Mix and match services",
+        "Save $50 vs drop-in rate",
         "Priority booking",
-        "Free consultation",
-        "20% savings vs drop-in",
-        "Mix any services"
       ],
       popular: true,
-      buttonText: "Choose Plan",
-      color: "from-coral/20 to-violet/20"
     },
     {
-      name: "Unlimited",
-      price: "249",
-      period: "per month",
-      description: "Complete recovery transformation",
+      name: "20 Session Pack",
+      price: "560",
+      period: "20 sessions",
+      description: "Maximum savings for committed recovery",
       features: [
-        "Unlimited sessions",
-        "All service access",
-        "Personal recovery plan",
-        "Advanced scheduling",
-        "Priority support",
-        "Guest passes (2/month)",
-        "Recovery tracking"
+        "20 sessions to any service",
+        "Valid for 6 months",
+        "Mix and match services",
+        "Save $140 vs drop-in rate",
+        "Priority booking",
+        "Free wellness consultation",
       ],
       popular: false,
-      buttonText: "Start Journey",
-      color: "from-calm-blue/10 to-ember/10"
-    }
+    },
   ];
 
   return (
-    <section id="memberships" className="py-20 lg:py-32 bg-gradient-wellness">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="packs" className="py-20 bg-background">
+      <div className="container px-4 mx-auto">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Choose Your Recovery Plan
+          <Badge variant="outline" className="mb-4 text-sm px-4 py-1">
+            Session Packs
+          </Badge>
+          <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4">
+            Our Packs
           </h2>
-          <p className="text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Flexible membership options designed to fit your recovery goals and schedule. 
-            Start your wellness journey with cutting-edge technology.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Save more with our flexible session packs
           </p>
         </div>
 
@@ -74,25 +69,21 @@ const MembershipsSection = () => {
             <Card 
               key={plan.name}
               className={`wellness-card relative animate-slide-up ${
-                plan.popular ? 'ring-2 ring-coral scale-105' : ''
+                plan.popular ? 'ring-2 ring-primary scale-105' : ''
               }`}
               style={{animationDelay: `${index * 0.15}s`}}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-gradient-accent text-white px-4 py-2 rounded-full text-sm font-medium flex items-center">
+                  <span className="bg-gradient-accent text-cream px-4 py-2 rounded-full text-sm font-medium flex items-center">
                     <Star className="w-4 h-4 mr-1" />
                     Most Popular
                   </span>
                 </div>
               )}
 
-              <CardHeader className="text-center pb-4">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${plan.color} flex items-center justify-center`}>
-                  <Zap className="w-8 h-8 text-primary" />
-                </div>
-                
-                <CardTitle className="font-heading text-2xl text-foreground">
+              <CardHeader className="text-center pb-4">                
+                <CardTitle className="font-serif text-2xl text-foreground">
                   {plan.name}
                 </CardTitle>
                 
@@ -101,8 +92,8 @@ const MembershipsSection = () => {
                 </CardDescription>
                 
                 <div className="mt-4">
-                  <span className="text-4xl font-bold text-foreground">${plan.price}</span>
-                  <span className="text-muted-foreground ml-2">{plan.period}</span>
+                  <span className="text-4xl font-bold text-foreground font-serif">${plan.price}</span>
+                  <span className="text-muted-foreground ml-2 text-sm">{plan.period}</span>
                 </div>
               </CardHeader>
 
@@ -110,7 +101,7 @@ const MembershipsSection = () => {
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start">
-                      <Check className="w-5 h-5 text-coral mr-3 mt-0.5 flex-shrink-0" />
+                      <Check className="w-5 h-5 text-primary mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-muted-foreground">{feature}</span>
                     </li>
                   ))}
@@ -121,19 +112,19 @@ const MembershipsSection = () => {
                     plan.popular ? 'btn-accent' : 'btn-wellness'
                   }`}
                 >
-                  {plan.buttonText}
+                  Purchase Pack
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <p className="text-muted-foreground mb-6">
-            Need a custom plan? We offer corporate and family packages.
+        <div className="mt-16 text-center">
+          <p className="text-lg text-muted-foreground mb-6">
+            Not sure which pack is right for you?
           </p>
-          <Button variant="outline" className="btn-ghost-wellness">
-            Contact Us
+          <Button size="lg" variant="outline" className="rounded-xl" asChild>
+            <a href="#memberships">View Memberships</a>
           </Button>
         </div>
       </div>

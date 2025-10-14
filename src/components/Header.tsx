@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X, User, LogOut } from "lucide-react";
+import logoWalnut from "@/assets/logo-walnut.jpg";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,8 +24,8 @@ const Header = () => {
   const navItems = [
     { name: "Services", href: "#services" },
     { name: "Memberships", href: "#memberships" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
+    { name: "Packs", href: "#packs" },
+    { name: "Group Bookings", href: "#group-bookings" },
   ];
 
   const handleMembersClick = () => {
@@ -36,11 +37,13 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <h1 className="font-heading text-xl font-bold text-foreground">
-              Home of Recovery
-            </h1>
-          </div>
+          <Link to="/" className="flex-shrink-0">
+            <img 
+              src={logoWalnut} 
+              alt="Home of Recovery" 
+              className="h-10 md:h-12 w-auto"
+            />
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
