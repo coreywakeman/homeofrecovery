@@ -23,9 +23,9 @@ const Header = () => {
 
   const navItems = [
     { name: "Services", href: "#services" },
-    { name: "Memberships", href: "#memberships" },
-    { name: "Packs", href: "#packs" },
-    { name: "Group Bookings", href: "#group-bookings" },
+    { name: "Memberships", href: "/memberships" },
+    { name: "Group Bookings", href: "/group-bookings" },
+    { name: "Contact", href: "/contact" },
   ];
 
   const handleMembersClick = () => {

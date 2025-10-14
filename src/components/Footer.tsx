@@ -5,9 +5,9 @@ import logoWhite from "@/assets/logo-white.png";
 const Footer = () => {
   const quickLinks = [
     { name: "Services", href: "#services" },
-    { name: "Memberships", href: "#memberships" },
-    { name: "Packs", href: "#packs" },
-    { name: "Group Bookings", href: "#group-bookings" },
+    { name: "Memberships", href: "/memberships" },
+    { name: "Group Bookings", href: "/group-bookings" },
+    { name: "Contact", href: "/contact" },
   ];
 
   const resources = [

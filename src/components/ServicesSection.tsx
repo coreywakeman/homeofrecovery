@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Flame, Zap, Waves, Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const services = [
   {
@@ -11,6 +12,7 @@ const services = [
     duration: "40 minutes",
     price: "$39",
     capacity: "1 person (can add a guest for $15)",
+    link: "/services/infrared-sauna",
     benefits: [
       "Improved circulation, supporting cardiovascular health",
       "Muscle recovery",
@@ -28,6 +30,7 @@ const services = [
     duration: "30 minutes / 1 hour",
     price: "$33 / $48",
     capacity: "1 person",
+    link: "/services/compression-therapy",
     benefits: [
       "Enhances circulation and blood flow",
       "Reduces swelling and fluid retention",
@@ -44,6 +47,7 @@ const services = [
     duration: "30 minutes",
     price: "$20",
     capacity: "Shared space",
+    link: "/services/contrast-therapy",
     benefits: [
       "Boosts circulation through alternating heat and cold",
       "Reduces inflammation and eases muscle soreness",
@@ -96,8 +100,8 @@ const ServicesSection = () => {
                         </div>
                       </div>
                     </div>
-                    <Button className="w-full mt-6 bg-cream text-walnut hover:bg-cream/90">
-                      Book Now
+                    <Button className="w-full mt-6 bg-cream text-walnut hover:bg-cream/90" asChild>
+                      <Link to={service.link}>Learn More</Link>
                     </Button>
                   </div>
                   
