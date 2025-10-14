@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-wellness.jpg";
+import heroImage from "@/assets/hero-icebath.jpg";
 import logoWalnut from "@/assets/logo-walnut.png";
 
 const Index = () => {
@@ -33,7 +33,7 @@ const Index = () => {
           <img 
             src={logoWalnut} 
             alt="Home of Recovery" 
-            className="h-10 md:h-12 w-auto opacity-90 hover:opacity-100 transition-opacity"
+            className="h-10 md:h-12 w-auto hover:opacity-90 transition-opacity"
           />
         </Link>
 
@@ -74,15 +74,23 @@ const Index = () => {
             }}
           >
             <h1 
-              className="font-bold text-white/95 leading-tight tracking-wide"
+              className="font-serif font-bold text-white/95 leading-tight tracking-wide mb-8"
               style={{
-                fontSize: "clamp(2rem, 5vw, 4.5rem)",
-                fontFamily: "DM Sans, sans-serif",
-                letterSpacing: "0.02em"
+                fontSize: "clamp(2.5rem, 6vw, 5rem)",
+                letterSpacing: "0.01em"
               }}
             >
               Dubbo's destination for all things recovery and wellness
             </h1>
+            <p 
+              className="font-body text-white/85 leading-relaxed max-w-3xl mx-auto"
+              style={{
+                fontSize: "clamp(1rem, 2.5vw, 1.5rem)",
+                letterSpacing: "0.015em"
+              }}
+            >
+              Home of Recovery is Dubbo's first dedicated recovery and wellness facility, designed to support both physical and mental wellbeing through industry-leading recovery services.
+            </p>
           </div>
         </div>
       </div>
