@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-icebath.jpg";
-import logoWalnut from "@/assets/logo-walnut.png";
+import Logo from "@/components/Logo";
 
 const Index = () => {
   useEffect(() => {
@@ -30,9 +30,8 @@ const Index = () => {
       <nav className="absolute top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex items-center justify-between animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms" }}>
         {/* Logo */}
         <Link to="/" className="opacity-0 animate-fade-in" style={{ animationDelay: "300ms", animationDuration: "600ms", animationFillMode: "forwards" }}>
-          <img 
-            src={logoWalnut} 
-            alt="Home of Recovery" 
+          <Logo 
+            variant="walnut"
             className="h-10 md:h-12 w-auto hover:opacity-90 transition-opacity"
           />
         </Link>

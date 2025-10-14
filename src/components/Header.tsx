@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X, User, LogOut } from "lucide-react";
-import logoWalnut from "@/assets/logo-walnut.png";
+import Logo from "@/components/Logo";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,9 +38,8 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
-            <img 
-              src={logoWalnut} 
-              alt="Home of Recovery" 
+            <Logo 
+              variant="walnut"
               className="h-10 md:h-12 w-auto"
             />
           </Link>

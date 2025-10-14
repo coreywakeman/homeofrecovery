@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Instagram, Facebook, Twitter } from "lucide-react";
-import logoWhite from "@/assets/logo-white.png";
+import Logo from "@/components/Logo";
 
 const Footer = () => {
   const quickLinks = [
@@ -23,9 +23,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <img 
-              src={logoWhite} 
-              alt="Home of Recovery" 
+            <Logo 
+              variant="beige"
               className="h-12 w-auto mb-4"
             />
             <p className="text-cream/80 leading-relaxed mb-6">
