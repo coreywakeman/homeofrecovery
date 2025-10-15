@@ -58,7 +58,7 @@ const Index = () => {
       {/* Centered Frosted Glass Card */}
       <div className="absolute inset-0 flex items-center justify-center px-4">
         <div 
-          className="max-w-5xl w-full opacity-0 animate-fade-in"
+          className="max-w-3xl w-full opacity-0 animate-fade-in"
           style={{ 
             animationDelay: "100ms", 
             animationDuration: "800ms",
@@ -66,25 +66,25 @@ const Index = () => {
           }}
         >
           <div 
-            className="backdrop-blur-[14px] bg-white/[0.08] border border-white/20 rounded-[24px] p-12 md:p-16 lg:p-20 text-center shadow-2xl"
+            className="backdrop-blur-[14px] bg-white/[0.08] border border-white/20 rounded-[24px] p-6 md:p-8 lg:p-10 text-center shadow-2xl"
             style={{
               backdropFilter: "blur(14px)",
               WebkitBackdropFilter: "blur(14px)"
             }}
           >
             <h1 
-              className="font-serif font-bold text-white/95 leading-tight tracking-wide mb-8"
+              className="font-serif font-bold text-white/95 leading-tight tracking-wide mb-4"
               style={{
-                fontSize: "clamp(2.5rem, 6vw, 5rem)",
+                fontSize: "clamp(1.25rem, 3vw, 2.5rem)",
                 letterSpacing: "0.01em"
               }}
             >
               Dubbo's destination for all things recovery and wellness
             </h1>
             <p 
-              className="font-body text-white/85 leading-relaxed max-w-3xl mx-auto mb-10"
+              className="font-body text-white/85 leading-relaxed max-w-2xl mx-auto mb-6"
               style={{
-                fontSize: "clamp(1rem, 2.5vw, 1.5rem)",
+                fontSize: "clamp(0.5rem, 1.25vw, 0.75rem)",
                 letterSpacing: "0.015em"
               }}
             >
@@ -92,10 +92,10 @@ const Index = () => {
             </p>
             
             {/* Call to Action Button */}
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-4">
               <Button 
                 variant="ghost"
-                className="bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 rounded-xl px-8 py-6 text-lg font-semibold"
+                className="bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 rounded-xl px-6 py-4 text-base font-semibold"
                 asChild
               >
                 <Link to="/services/infrared-sauna">View Services</Link>
