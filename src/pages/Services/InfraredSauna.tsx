@@ -4,8 +4,17 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Flame, Clock, Users, Check } from "lucide-react";
 import heroSauna from "@/assets/hero-wellness.jpg";
+import { useToast } from "@/hooks/use-toast";
 
 const InfraredSauna = () => {
+  const { toast } = useToast();
+
+  const handleBookSession = () => {
+    toast({
+      title: "Booking Available Soon!",
+      description: "Contact us at info@homeofrecovery.au to book your session.",
+    });
+  };
   const benefits = [
     "Improved circulation",
     "Muscle recovery",
@@ -90,7 +99,7 @@ const InfraredSauna = () => {
             </div>
 
             <div className="text-center">
-              <Button size="lg" className="btn-wellness text-lg px-12 py-6">
+              <Button size="lg" className="btn-wellness text-lg px-12 py-6" onClick={handleBookSession}>
                 Book Your Session
               </Button>
             </div>

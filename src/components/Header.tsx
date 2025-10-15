@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X, User, LogOut } from "lucide-react";
 import Logo from "@/components/Logo";
+import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { toast } = useToast();
 
   // Redirect admins to dashboard only from auth page
   useEffect(() => {
@@ -22,14 +25,44 @@ const Header = () => {
   };
 
   const navItems = [
-    { name: "Services", href: "#services" },
-    { name: "Memberships", href: "/memberships" },
-    { name: "Group Bookings", href: "/group-bookings" },
-    { name: "Contact", href: "/contact" },
+    { name: "Services", href: "/#services", isAnchor: true },
+    { name: "Memberships", href: "/memberships", isAnchor: false },
+    { name: "Group Bookings", href: "/group-bookings", isAnchor: false },
+    { name: "Contact", href: "/contact", isAnchor: false },
   ];
 
   const handleMembersClick = () => {
     navigate('/members');
+  };
+
+  const handleNavClick = (e: React.MouseEvent, href: string, isAnchor: boolean) => {
+    if (isAnchor) {
+      e.preventDefault();
+      if (location.pathname === '/') {
+        // Already on homepage, just scroll
+        const element = document.getElementById('services');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Navigate to homepage first, then scroll
+        navigate('/');
+        setTimeout(() => {
+          const element = document.getElementById('services');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+      setIsMenuOpen(false);
+    }
+  };
+
+  const handleBookSessionClick = () => {
+    toast({
+      title: "Booking Available Soon!",
+      description: "Contact us at info@homeofrecovery.au to book your session.",
+    });
   };
 
   return (
@@ -47,13 +80,24 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item.name}
-              </a>
+              item.isAnchor ? (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href, true)}
+                  className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                  {item.name}
+                </a>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {item.name}
+                </Link>
+              )
             ))}
             
             {user && !isAdmin ? (
@@ -77,7 +121,7 @@ const Header = () => {
                     Sign In
                   </Button>
                 </Link>
-                <Button className="btn-wellness">Book Session</Button>
+                <Button className="btn-wellness" onClick={handleBookSessionClick}>Book Session</Button>
               </div>
             ) : null}
           </nav>
@@ -98,14 +142,25 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t border-border">
               {navItems.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 text-muted-foreground hover:text-foreground"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
+                item.isAnchor ? (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(e, item.href, true)}
+                    className="block px-3 py-2 text-muted-foreground hover:text-foreground cursor-pointer"
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="block px-3 py-2 text-muted-foreground hover:text-foreground"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
               ))}
               
               {user && !isAdmin ? (
@@ -127,7 +182,7 @@ const Header = () => {
                       Sign In
                     </Button>
                   </Link>
-                  <Button className="btn-wellness w-full">Book Session</Button>
+                  <Button className="btn-wellness w-full" onClick={handleBookSessionClick}>Book Session</Button>
                 </div>
               ) : null}
             </div>

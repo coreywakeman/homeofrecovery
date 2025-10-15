@@ -1,21 +1,35 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Mail, Instagram, Facebook, Twitter } from "lucide-react";
 import Logo from "@/components/Logo";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const quickLinks = [
-    { name: "Services", href: "#services" },
-    { name: "Memberships", href: "/memberships" },
-    { name: "Group Bookings", href: "/group-bookings" },
-    { name: "Contact", href: "/contact" },
+    { name: "Services", href: "/#services", isAnchor: true },
+    { name: "Memberships", href: "/memberships", isAnchor: false },
+    { name: "Group Bookings", href: "/group-bookings", isAnchor: false },
+    { name: "Contact", href: "/contact", isAnchor: false },
   ];
 
-  const resources = [
-    "Recovery Blog",
-    "Wellness Tips",
-    "Privacy Policy",
-    "Terms of Service"
-  ];
+  const handleServicesClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const element = document.getElementById('services');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById('services');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
 
   return (
     <footer className="bg-walnut text-cream">
@@ -51,9 +65,19 @@ const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-cream/80 hover:text-mid-taupe transition-colors">
-                    {link.name}
-                  </a>
+                  {link.isAnchor ? (
+                    <a 
+                      href={link.href} 
+                      onClick={handleServicesClick}
+                      className="text-cream/80 hover:text-mid-taupe transition-colors cursor-pointer"
+                    >
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link to={link.href} className="text-cream/80 hover:text-mid-taupe transition-colors">
+                      {link.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -84,12 +108,12 @@ const Footer = () => {
             © 2024 Home of Recovery. All rights reserved.
           </p>
           <div className="flex space-x-6 text-sm">
-            <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
+            <Link to="/privacy-policy" className="text-cream/60 hover:text-mid-taupe transition-colors">
               Privacy Policy
-            </a>
-            <a href="#" className="text-cream/60 hover:text-mid-taupe transition-colors">
+            </Link>
+            <Link to="/terms-of-service" className="text-cream/60 hover:text-mid-taupe transition-colors">
               Terms of Service
-            </a>
+            </Link>
             <Link to="/admin" className="text-cream/60 hover:text-mid-taupe transition-colors">
               Admin
             </Link>

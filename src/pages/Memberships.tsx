@@ -4,8 +4,31 @@ import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Check, Zap } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const Memberships = () => {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Scroll to intro offer section if hash is present
+    if (window.location.hash === '#intro-offer') {
+      setTimeout(() => {
+        const element = document.getElementById('intro-offer');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }, []);
+
+  const handlePurchaseClick = () => {
+    toast({
+      title: "Coming Soon!",
+      description: "Membership purchase will be available soon. Contact us at info@homeofrecovery.au for details.",
+    });
+  };
+
   const packs = [
     {
       name: "5 Session Pack",
@@ -113,7 +136,7 @@ const Memberships = () => {
                 </div>
               </div>
 
-              <Button size="lg" className="w-full text-lg py-6">
+              <Button size="lg" className="w-full text-lg py-6" onClick={handlePurchaseClick}>
                 Become a Member
               </Button>
             </CardContent>
@@ -122,7 +145,7 @@ const Memberships = () => {
       </section>
 
       {/* Intro Offer */}
-      <section className="py-20 bg-gradient-wellness">
+      <section id="intro-offer" className="py-20 bg-gradient-wellness">
         <div className="container px-4 mx-auto max-w-4xl">
           <Card className="wellness-card">
             <CardHeader className="text-center pb-6">
@@ -153,7 +176,7 @@ const Memberships = () => {
                 </div>
               </div>
 
-              <Button size="lg" className="w-full text-lg py-6">
+              <Button size="lg" className="w-full text-lg py-6" onClick={handlePurchaseClick}>
                 Claim Your Intro Offer
               </Button>
             </CardContent>
@@ -202,6 +225,7 @@ const Memberships = () => {
                   <Button 
                     className={pack.popular ? "w-full" : "w-full"} 
                     variant={pack.popular ? "default" : "outline"}
+                    onClick={handlePurchaseClick}
                   >
                     Purchase Pack
                   </Button>

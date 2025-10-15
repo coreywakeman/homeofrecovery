@@ -4,8 +4,17 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Activity, Clock, Check } from "lucide-react";
 import heroRecovery from "@/assets/hero-recovery-center.jpg";
+import { useToast } from "@/hooks/use-toast";
 
 const CompressionTherapy = () => {
+  const { toast } = useToast();
+
+  const handleBookSession = () => {
+    toast({
+      title: "Booking Available Soon!",
+      description: "Contact us at info@homeofrecovery.au to book your session.",
+    });
+  };
   const benefits = [
     "Reduces muscle soreness",
     "Decreases fatigue",
@@ -83,7 +92,7 @@ const CompressionTherapy = () => {
             </div>
 
             <div className="text-center">
-              <Button size="lg" className="btn-wellness text-lg px-12 py-6">
+              <Button size="lg" className="btn-wellness text-lg px-12 py-6" onClick={handleBookSession}>
                 Book Your Session
               </Button>
             </div>

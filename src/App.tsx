@@ -14,6 +14,8 @@ import Contact from "./pages/Contact";
 import InfraredSauna from "./pages/Services/InfraredSauna";
 import CompressionTherapy from "./pages/Services/CompressionTherapy";
 import ContrastTherapy from "./pages/Services/ContrastTherapy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,8 @@ const AppContent = () => {
         <Route path="/services/infrared-sauna" element={<InfraredSauna />} />
         <Route path="/services/compression-therapy" element={<CompressionTherapy />} />
         <Route path="/services/contrast-therapy" element={<ContrastTherapy />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
