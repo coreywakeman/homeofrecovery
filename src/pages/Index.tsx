@@ -91,28 +91,14 @@ const Index = () => {
               Home of Recovery is Dubbo's first dedicated recovery and wellness facility, designed to support both physical and mental wellbeing through industry-leading recovery services.
             </p>
             
-            {/* Call to Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+            {/* Call to Action Button */}
+            <div className="flex justify-center mt-8">
               <Button 
                 variant="ghost"
                 className="bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 rounded-xl px-8 py-6 text-lg font-semibold"
                 asChild
               >
                 <Link to="/services/infrared-sauna">View Services</Link>
-              </Button>
-              <Button 
-                variant="ghost"
-                className="bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 rounded-xl px-8 py-6 text-lg font-semibold"
-                asChild
-              >
-                <Link to="/contact">Contact Us</Link>
-              </Button>
-              <Button 
-                variant="ghost"
-                className="bg-white text-walnut hover:bg-white/90 transition-all duration-300 rounded-xl px-8 py-6 text-lg font-semibold"
-                asChild
-              >
-                <Link to="/memberships">Get Started</Link>
               </Button>
             </div>
           </div>
