@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Flame, Clock, Users, Check } from "lucide-react";
-import heroSauna from "@/assets/hero-wellness.jpg";
+import heroSauna from "@/assets/hero-infrared-sauna.jpg";
 import { useToast } from "@/hooks/use-toast";
 
 const InfraredSauna = () => {
