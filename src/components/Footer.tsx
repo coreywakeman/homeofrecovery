@@ -1,6 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Mail, Instagram, Facebook, Twitter } from "lucide-react";
-import Logo from "@/components/Logo";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -19,10 +18,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <Logo 
-              variant="beige"
-              className="h-12 w-auto mb-4"
-            />
+            <h3 className="font-serif text-2xl font-bold text-cream mb-4">
+              Home of Recovery
+            </h3>
             <p className="text-cream/80 leading-relaxed mb-6">
               Dubbo's first dedicated recovery and wellness facility, designed to support both physical and mental wellbeing through industry-leading recovery services.
             </p>
