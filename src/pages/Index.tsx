@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-icebath-new.jpg";
 import Logo from "@/components/Logo";
 
 const Index = () => {
@@ -15,14 +14,17 @@ const Index = () => {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
-      {/* Background Image with Gradient Overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center animate-fade-in"
-        style={{ 
-          backgroundImage: `url(${heroImage})`,
-          animationDuration: "800ms"
-        }}
-      >
+      {/* Background Video with Gradient Overlay */}
+      <div className="absolute inset-0 animate-fade-in" style={{ animationDuration: "800ms" }}>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/hero-video-1.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-br from-walnut/60 via-walnut/40 to-transparent" />
       </div>
 
