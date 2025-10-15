@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import logoHomepage from "@/assets/logo-homepage.png";
 
 const Index = () => {
   useEffect(() => {
@@ -33,9 +34,11 @@ const Index = () => {
       <nav className="absolute top-0 left-0 right-0 z-50 px-6 md:px-12 pt-2 pb-4 flex items-start justify-between nav-fade-in">
         {/* Brand */}
         <Link to="/" className="logo-fade-in">
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white/95 hover:text-white/90 transition-colors">
-            Home of Recovery
-          </h1>
+          <img 
+            src={logoHomepage} 
+            alt="Home of Recovery" 
+            className="h-24 sm:h-32 md:h-40 lg:h-48 w-auto hover:opacity-90 transition-opacity"
+          />
         </Link>
 
         {/* Nav Buttons */}
