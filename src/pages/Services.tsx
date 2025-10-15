@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MemberOfferBanner from "@/components/MemberOfferBanner";
 import { Clock, DollarSign, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import saunaImage from "@/assets/service-infrared-sauna.jpg";
@@ -63,6 +64,7 @@ const Services = () => {
   return (
     <div className="min-h-screen">
       <Header />
+      <MemberOfferBanner />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-wellness">
