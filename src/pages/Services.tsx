@@ -1,17 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Flame, Activity, Droplet, Clock, DollarSign, Check, ArrowRight } from "lucide-react";
+import { Clock, DollarSign, Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import saunaImage from "@/assets/service-infrared-sauna.jpg";
+import compressionImage from "@/assets/service-compression-therapy.jpg";
+import contrastImage from "@/assets/service-contrast-therapy.jpg";
 
 const Services = () => {
   const services = [
     {
       id: "infrared-sauna",
       name: "Infrared Sauna Therapy",
-      icon: Flame,
+      image: saunaImage,
       duration: "40 minutes",
       price: "$39",
       guestPrice: "+$15",
@@ -22,13 +24,12 @@ const Services = () => {
         "Improves skin tone and elasticity",
         "Enhances circulation and heart health"
       ],
-      link: "/services/infrared-sauna",
-      color: "from-orange-500 to-red-500"
+      link: "/services/infrared-sauna"
     },
     {
       id: "compression-therapy",
       name: "Compression Therapy",
-      icon: Activity,
+      image: compressionImage,
       durations: [
         { time: "30 minutes", price: "$33" },
         { time: "60 minutes", price: "$48" }
@@ -40,13 +41,12 @@ const Services = () => {
         "Supports lymphatic drainage",
         "Ideal for athletes or those standing long hours"
       ],
-      link: "/services/compression-therapy",
-      color: "from-blue-500 to-cyan-500"
+      link: "/services/compression-therapy"
     },
     {
       id: "contrast-therapy",
       name: "Contrast Therapy (Hot & Cold)",
-      icon: Droplet,
+      image: contrastImage,
       duration: "30 minutes",
       price: "$20",
       description: "Alternate between hot and cold plunges to rejuvenate your body and reduce inflammation naturally.",
@@ -56,8 +56,7 @@ const Services = () => {
         "Enhances mental alertness",
         "Shared-space recovery experience"
       ],
-      link: "/services/contrast-therapy",
-      color: "from-purple-500 to-pink-500"
+      link: "/services/contrast-therapy"
     }
   ];
 
@@ -82,13 +81,19 @@ const Services = () => {
         <div className="container px-4 mx-auto">
           <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {services.map((service) => {
-              const IconComponent = service.icon;
               return (
-                <Card key={service.id} className="wellness-card hover:shadow-xl transition-all duration-300">
+                <Card key={service.id} className="wellness-card hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  {/* Service Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={service.image} 
+                      alt={service.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  </div>
+                  
                   <CardHeader>
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center mb-4`}>
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </div>
                     <CardTitle className="font-serif text-2xl mb-2">
                       {service.name}
                     </CardTitle>
