@@ -1,11 +1,11 @@
 const MemberOfferBanner = () => {
   const offers = [
     "Members Save 20% on All Services",
-    "Unlimited Monthly Access for $199",
+    "Exclusive Member Discounts Available",
     "Join Today & Get Your First Session Free",
-    "Exclusive Member-Only Benefits",
-    "Premium Recovery at Member Prices",
-    "Flexible Membership Plans Available"
+    "Special Member-Only Pricing",
+    "Premium Recovery at Member Rates",
+    "Unlock Member Benefits & Savings"
   ];
 
   return (
