@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X, User, LogOut } from "lucide-react";
-import Logo from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 
 const Header = () => {
@@ -46,12 +45,11 @@ const Header = () => {
     <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo/Brand */}
           <Link to="/" className="flex-shrink-0">
-            <Logo 
-              variant="walnut"
-              className="h-10 md:h-12 w-auto"
-            />
+            <h1 className="font-serif text-xl md:text-2xl font-bold text-foreground hover:text-muted-foreground transition-colors">
+              Home of Recovery
+            </h1>
           </Link>
 
           {/* Desktop Navigation */}
