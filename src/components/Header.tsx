@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import logoHeader from "@/assets/logo-header.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,9 +48,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <Link to="/" className="flex-shrink-0">
-            <h1 className="font-serif text-xl md:text-2xl font-bold text-foreground hover:text-muted-foreground transition-colors">
-              Home of Recovery
-            </h1>
+            <img 
+              src={logoHeader} 
+              alt="Home of Recovery" 
+              className="h-8 md:h-10 w-auto"
+            />
           </Link>
 
           {/* Desktop Navigation */}
