@@ -196,7 +196,7 @@ const Services = () => {
                   <Button 
                     size="lg" 
                     variant="outline"
-                    className="border-cream text-cream hover:bg-cream/10"
+                    className="border-cream text-walnut bg-cream hover:bg-cream/90"
                     asChild
                   >
                     <Link to="/memberships">View Memberships</Link>
