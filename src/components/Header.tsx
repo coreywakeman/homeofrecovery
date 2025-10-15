@@ -25,7 +25,7 @@ const Header = () => {
   };
 
   const navItems = [
-    { name: "Services", href: "/#services", isAnchor: true },
+    { name: "Services", href: "/services", isAnchor: false },
     { name: "Memberships", href: "/memberships", isAnchor: false },
     { name: "Group Bookings", href: "/group-bookings", isAnchor: false },
     { name: "Contact", href: "/contact", isAnchor: false },
@@ -33,29 +33,6 @@ const Header = () => {
 
   const handleMembersClick = () => {
     navigate('/members');
-  };
-
-  const handleNavClick = (e: React.MouseEvent, href: string, isAnchor: boolean) => {
-    if (isAnchor) {
-      e.preventDefault();
-      if (location.pathname === '/') {
-        // Already on homepage, just scroll
-        const element = document.getElementById('services');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      } else {
-        // Navigate to homepage first, then scroll
-        navigate('/');
-        setTimeout(() => {
-          const element = document.getElementById('services');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 100);
-      }
-      setIsMenuOpen(false);
-    }
   };
 
   const handleBookSessionClick = () => {
@@ -80,24 +57,13 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              item.isAnchor ? (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href, true)}
-                  className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                >
-                  {item.name}
-                </a>
-              ) : (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {item.name}
-                </Link>
-              )
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {item.name}
+              </Link>
             ))}
             
             {user && !isAdmin ? (
@@ -142,25 +108,14 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background border-t border-border">
               {navItems.map((item) => (
-                item.isAnchor ? (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href, true)}
-                    className="block px-3 py-2 text-muted-foreground hover:text-foreground cursor-pointer"
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="block px-3 py-2 text-muted-foreground hover:text-foreground"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                )
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="block px-3 py-2 text-muted-foreground hover:text-foreground"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
               ))}
               
               {user && !isAdmin ? (

@@ -9,6 +9,7 @@ import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import Members from "./pages/Members";
 import Memberships from "./pages/Memberships";
+import Services from "./pages/Services";
 import GroupBookings from "./pages/GroupBookings";
 import Contact from "./pages/Contact";
 import InfraredSauna from "./pages/Services/InfraredSauna";
@@ -42,6 +43,7 @@ const AppContent = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/members" element={<Members />} />
         <Route path="/memberships" element={<Memberships />} />
+        <Route path="/services" element={<Services />} />
         <Route path="/group-bookings" element={<GroupBookings />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/services/infrared-sauna" element={<InfraredSauna />} />

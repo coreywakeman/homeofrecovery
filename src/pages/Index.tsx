@@ -98,7 +98,7 @@ const Index = () => {
                 className="bg-white/20 backdrop-blur-md border border-white/30 text-white hover:bg-white/30 transition-all duration-300 rounded-xl px-6 py-4 text-base font-semibold"
                 asChild
               >
-                <Link to="/services/infrared-sauna">View Services</Link>
+                <Link to="/services">View Services</Link>
               </Button>
             </div>
           </div>

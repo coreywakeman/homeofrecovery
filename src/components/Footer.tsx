@@ -7,29 +7,11 @@ const Footer = () => {
   const location = useLocation();
 
   const quickLinks = [
-    { name: "Services", href: "/#services", isAnchor: true },
+    { name: "Services", href: "/services", isAnchor: false },
     { name: "Memberships", href: "/memberships", isAnchor: false },
     { name: "Group Bookings", href: "/group-bookings", isAnchor: false },
     { name: "Contact", href: "/contact", isAnchor: false },
   ];
-
-  const handleServicesClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (location.pathname === '/') {
-      const element = document.getElementById('services');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } else {
-      navigate('/');
-      setTimeout(() => {
-        const element = document.getElementById('services');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
 
   return (
     <footer className="bg-walnut text-cream">
@@ -65,19 +47,9 @@ const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  {link.isAnchor ? (
-                    <a 
-                      href={link.href} 
-                      onClick={handleServicesClick}
-                      className="text-cream/80 hover:text-mid-taupe transition-colors cursor-pointer"
-                    >
-                      {link.name}
-                    </a>
-                  ) : (
-                    <Link to={link.href} className="text-cream/80 hover:text-mid-taupe transition-colors">
-                      {link.name}
-                    </Link>
-                  )}
+                  <Link to={link.href} className="text-cream/80 hover:text-mid-taupe transition-colors">
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
