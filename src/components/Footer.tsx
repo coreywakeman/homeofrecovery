@@ -86,12 +86,6 @@ const Footer = () => {
             <Link to="/terms-of-service" className="text-cream/60 hover:text-mid-taupe transition-colors">
               Terms of Service
             </Link>
-            <Link to="/admin" className="text-cream/60 hover:text-mid-taupe transition-colors">
-              Admin
-            </Link>
-            <Link to="/members" className="text-cream/60 hover:text-mid-taupe transition-colors">
-              Members
-            </Link>
           </div>
         </div>
       </div>

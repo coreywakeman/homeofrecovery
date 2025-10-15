@@ -81,12 +81,6 @@ const Header = () => {
               </div>
             ) : !user ? (
               <div className="flex items-center space-x-4">
-                <Link to="/auth">
-                  <Button variant="outline">
-                    <User className="w-4 h-4 mr-2" />
-                    Sign In
-                  </Button>
-                </Link>
                 <Button className="btn-wellness" onClick={handleBookSessionClick}>Book Session</Button>
               </div>
             ) : null}
@@ -131,12 +125,6 @@ const Header = () => {
                 </div>
               ) : !user ? (
                 <div className="px-3 py-2 space-y-2">
-                  <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="outline" className="w-full">
-                      <User className="w-4 h-4 mr-2" />
-                      Sign In
-                    </Button>
-                  </Link>
                   <Button className="btn-wellness w-full" onClick={handleBookSessionClick}>Book Session</Button>
                 </div>
               ) : null}
