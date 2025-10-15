@@ -31,12 +31,13 @@ const InfraredSauna = () => {
       
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroSauna})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-walnut/80 to-walnut/60" />
-        </div>
+        <img 
+          src={heroSauna}
+          alt="Infrared sauna wellness therapy room"
+          loading="eager"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-walnut/80 to-walnut/60" />
         
         <div className="container relative z-10 px-4 text-center text-cream">
           <Flame className="w-16 h-16 mx-auto mb-6" />

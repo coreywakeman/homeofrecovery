@@ -180,9 +180,32 @@
   .animate-slide-up {
     animation: slideUp 0.8s ease-out;
   }
-  
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
+
+  /* Homepage optimized animations */
+  .nav-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.3s forwards;
+  }
+
+  .logo-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.3s forwards;
+  }
+
+  .buttons-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.4s forwards;
+  }
+
+  .card-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.1s forwards;
+  }
+
+  /* Touch optimization */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -208,11 +231,3 @@
   }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
