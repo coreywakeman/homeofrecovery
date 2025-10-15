@@ -100,22 +100,22 @@ const GroupBookings = () => {
 
           {/* Contact CTA */}
           <Card className="wellness-card max-w-3xl mx-auto overflow-hidden border-2 border-primary/20">
-            <div className="bg-gradient-accent p-12 text-center">
-              <Mail className="w-16 h-16 mx-auto mb-4 text-cream" />
-              <h3 className="font-serif text-3xl font-bold text-cream mb-3">
+            <div className="bg-gradient-accent p-6 sm:p-8 md:p-12 text-center">
+              <Mail className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-cream" />
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold text-cream mb-3">
                 Let's Plan Your Session
               </h3>
-              <p className="text-cream/90 text-lg mb-6">
+              <p className="text-cream/90 text-base sm:text-lg mb-6 px-2">
                 Get in touch to discuss availability, pricing, and customize your group experience
               </p>
               <Button 
                 size="lg"
-                className="bg-cream text-walnut hover:bg-cream/90 text-lg px-8 py-6"
+                className="bg-cream text-walnut hover:bg-cream/90 text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto break-all sm:break-normal"
                 asChild
               >
-                <a href="mailto:info@homeofrecovery.au">
-                  <Mail className="mr-2 h-5 w-5" />
-                  Email: info@homeofrecovery.au
+                <a href="mailto:info@homeofrecovery.au" className="inline-flex items-center justify-center">
+                  <Mail className="mr-2 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                  <span className="truncate">info@homeofrecovery.au</span>
                 </a>
               </Button>
             </div>
