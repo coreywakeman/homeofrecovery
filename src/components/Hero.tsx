@@ -1,14 +1,19 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-wellness.jpg";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
+      {/* Background Video */}
+      <div className="absolute inset-0">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/videos/hero-video-1.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 hero-gradient" />
       </div>
 
