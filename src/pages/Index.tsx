@@ -37,7 +37,7 @@ const Index = () => {
           <img 
             src={logoHomepage} 
             alt="Home of Recovery" 
-            className="h-24 sm:h-32 md:h-40 lg:h-48 w-auto hover:opacity-90 transition-opacity"
+            className="h-12 sm:h-16 md:h-20 lg:h-24 w-auto hover:opacity-90 transition-opacity"
           />
         </Link>
 
